@@ -1,7 +1,13 @@
+#!/bin/bash
+
 myfind() {
   FFOUND_PWD=${PWD}
-  FFOUND=($(find . -iname "*$2*" -type "$1"))
+  FFOUND=($(myfff $1 $2))
   print_found
+}
+
+myfff() {
+    find . -iname "*$2*" -type "$1"
 }
 
 print_found() {
@@ -16,11 +22,14 @@ done
 
 lf() { print_found; }
 
+fff() { myfff "f" "$1"; }
 ff() { myfind "f" "$1"; }
 
 fd() { myfind "d" "$1"; }
 
 fn() {
+    echo ${FFOUND};
+
   [ ! -z ${FFOUND[$1-1]} ] && echo ${FFOUND_PWD}/${FFOUND[$1-1]};
 }
 
@@ -29,3 +38,55 @@ vf() { vim $(fn "$1"); }
 d() { cd $(dirname $(fn "$1")); }
 
 c() { cat $(fn "$1"); }
+
+edit() {
+  vim $HOME/.dots/bash/conf/$1
+}
+
+scaffold() {
+  vraptor scaffold $*;
+  prj=`findproject`;
+  echo "[$prj] vraptor scaffold $*" >> ~/vraptor-scaffold.log;
+}
+
+findproject() {
+  echo ${PWD} | awk -F'/' '{ print $(NF) }';
+}
+
+pkg-run() {
+  mvn package;
+  echo "\n\nBUILD IS DONE ===> STARTING SERVER...\n\n";
+  sh target/bin/webapp;
+}
+
+mvn_create() {
+  mvn archetype:generate -DgroupId=$1 -DartifactId=$1 -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false;
+}
+
+ps() {
+  /bin/ps -$1;
+}
+
+eclipseupdate(){
+  mvn eclipse:eclipse;
+}
+
+reloadsource(){
+  source ~/.bashrc;
+}
+
+fixsubtitles() {
+  for i in $(ls -1 *.avi) 
+  do 
+    name=`echo $i | cut -d'.' -f1,2,3,4`;
+    oldfile=`find . -iname "$name*.srt"`; 
+    newfile=`echo $i | awk -F'.avi' '{ print $1 }'`; 
+    mv $oldfile $newfile.srt;
+  done
+}
+
+awkp() {
+    param1=$1;
+    awkparam="{ print \$$param1 }";
+    awk "$awkparam";
+}

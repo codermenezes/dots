@@ -1,10 +1,13 @@
 # set up the terminal format
 USER_AND_HOST_='\[\e[0;34m\]' ;
+USER_='\[\e[0;34m\]' ;
+HOST_='\[\e[0;37m\]' ;
 PATH_='\[\e[;32m\]' ;
 GIT_='\[\e[;31m\]' ;
 GIT_REPO_='$(__git_ps1 "(%s) ")' ;
 SEPARATOR_='\[\e[;31m\]' ;
 SYMBOL='∴' ;
+SYMBOL_='$' ;
 PROMPT_='\[\e[;37m\]'
 END_='\[\e[m\]' ;
-export PS1="$USER_AND_HOST_\u@\h $PATH_\W $GIT_$GIT_REPO_$SEPARATOR_$SYMBOL $PROMPT_$END_"
+export PS1="$USER_\u@$HOST_\h: $PATH_\W $GIT_$GIT_REPO_$SEPARATOR_$SYMBOL_ $PROMPT_$END_"

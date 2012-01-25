@@ -1,5 +1,6 @@
 # make ls colorful
-alias ls='ls --color=auto'
+alias ls='ls -1 -G';
+alias sl='ls';
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
@@ -19,3 +20,6 @@ case `uname -s` in
 esac
 alias v="vim"
 alias g="git"
+export GG='/Users/filipesperandio/gid-git-svn/gid'
+alias gg='cd $GG'
+alias br='cd /Users/filipesperandio/gid-git-svn/brazil-build'
