@@ -213,3 +213,4 @@ add_line_after() {
     /usr/bin/awk -v pattern="$1" -v new_line="$2" '{ print $0; if ( $0 ~ pattern ) { print new_line; } }' < $3
 }
 
+function hex { echo "obase=16; $1" | bc; }

@@ -37,3 +37,17 @@ alias scaf="rm -rf scaf_bootstrap/; vraptor new scaf_bootstrap --heroku --bootst
 alias screencasts='cd ~/Movies/casts'
 alias ltree='tree | less'
 alias y=yeoman
+
+#add autocomplete for g alias
+complete -o bashdefault -o default -o nospace -F _git g
+#bundle aliases
+alias b="bundle"
+alias be="bundle exec"
+alias ber="bundle exec rake"
+alias bert="bundle exec rake environment RAILS_ENV=test"
+#rails alias
+alias r="rails"
+# alias to projects folder
+alias gp="cd ~/prj"
+# alias to current projects folder
+alias gc="cd ~/prj/current"
