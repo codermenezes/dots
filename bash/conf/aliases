@@ -5,7 +5,7 @@ alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
 # make grep colorful
-alias grep='grep --color=auto -i'
+alias cgrep='grep --color=auto -i'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 # set localhost alias
@@ -13,13 +13,27 @@ alias here="localhost"
 # set move and copy to be verbose
 alias mv="mv -v"
 alias cp="cp -v"
-alias vi="vim"
-case `uname -s` in
- 'Linux') if type -p gvim &>/dev/null; then alias vim="gvim"; fi ;;
- 'Darwin') if type -p mvim &>/dev/null; then alias vim="mvim"; fi ;;
-esac
-alias v="vim"
+#alias vi="vim"
+#case `uname -s` in
+# 'Linux') if type -p gvim &>/dev/null; then alias vim="gvim"; fi ;;
+# 'Darwin') if type -p mvim &>/dev/null; then alias vim="mvim"; fi ;;
+#esac
+#alias v="vim"
 alias g="git"
 export GG='/Users/filipesperandio/gid-git-svn/gid'
 alias gg='cd $GG'
 alias br='cd /Users/filipesperandio/gid-git-svn/brazil-build'
+alias ww='cd $HOME/workspaces'
+alias easyretro='bundle exec rake start'
+alias rsync='/usr/bin/rsync --progress'
+alias deploy='git push heroku master'
+alias rr='source ~/.bashrc'
+alias deploy='git push heroku master'
+
+alias install_vim='brew install https://raw.github.com/adamv/homebrew-alt/master/duplicates/vim.rb'
+
+alias vv='/Users/filipesperandio/workspaces/vraptor-scaffold/bin/vraptor'
+alias scaf="rm -rf scaf_bootstrap/; vraptor new scaf_bootstrap --heroku --bootstrap; cd scaf_bootstrap/; vraptor scaffold User name:string desc:text; pkg-run;"
+alias screencasts='cd ~/Movies/casts'
+alias ltree='tree | less'
+alias y=yeoman

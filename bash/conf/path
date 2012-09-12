@@ -8,4 +8,9 @@ PATH="/usr/bin:$PATH"
 PATH="/usr/sbin:$PATH"
 PATH="/bin:$PATH"
 PATH="/sbin:$PATH"
+PATH="$HOME/workspaces/vraptor-scaffold/bin:$PATH"
 export PATH
+
+export JAVA_HOME=/Library/Java/Home
+
+

@@ -23,6 +23,34 @@ done
 lf() { print_found; }
 
 fff() { myfff "f" "$1"; }
+
+ggfcode() {
+    if [ "$1" == "help" ]; then
+        echo "Usage: fcode <code> <file_pattern>"
+        echo "       fcode signedIn .java"
+        return;
+    fi
+    gg;
+    gg_grep_code $1 $2;
+}
+ggfclass() {
+    gg;
+    find_on_dir "ecom" $1;
+    find_on_dir "components" $1;
+}
+gg_grep_code() {
+    find_on_dir "ecom" $2 | xargs grep -in $1;
+    find_on_dir "components" $2 |xargs grep -in $1;
+}
+
+find_on_dir() {
+    find $1 -iname "*$2*" -type "f" | grep -v test | grep -v bin;
+}
+
+fcode() {
+    find_on_dir "." $2 | xargs grep -in $1;
+}
+
 ff() { myfind "f" "$1"; }
 
 fd() { myfind "d" "$1"; }
@@ -53,7 +81,11 @@ findproject() {
   echo ${PWD} | awk -F'/' '{ print $(NF) }';
 }
 
+awkk() {
+    awk -F"$1" "{ print \$$2 }";
+}
 pkg-run() {
+  mvn clean;
   mvn package;
   echo "\n\nBUILD IS DONE ===> STARTING SERVER...\n\n";
   sh target/bin/webapp;
@@ -71,10 +103,6 @@ eclipseupdate(){
   mvn eclipse:eclipse;
 }
 
-reloadsource(){
-  source ~/.bashrc;
-}
-
 fixsubtitles() {
   for i in $(ls -1 *.avi) 
   do 
@@ -90,3 +118,98 @@ awkp() {
     awkparam="{ print \$$param1 }";
     awk "$awkparam";
 }
+
+resolve_ecom() {
+    echo "Fixing perl..."
+    gg;
+    cd build/buildeng;
+    sed 's/<env key="VERSIONER_PERL_VERSION" value="5.8.9"\/>//' <dependency.xml > dependency-tmp.xml; 
+    mv dependency-tmp.xml dependency.xml;
+    br;
+    echo "rake components";
+    echo
+    echo
+    echo
+    rake components;
+    echo "rake ecom";
+    echo
+    echo
+    echo
+    rake ecom;
+    echo "Checking out original dependency.xml back"
+    gg;
+    cd build/buildeng;
+    git checkout dependency.xml;
+}
+
+setup_eclipse_tomcat() {
+    cd $HOME/tmp/workspaces/build/buildeng;
+    ./ant -Dalias=ecom -Dno.svn.access=true clean-tomcat-eclipse tomcat-eclipse
+}
+
+upi() {
+    echo $1 >> ~/setup.bkp/install.sh;
+}
+
+poadb() {
+  sqlplus $1/$1@10.27.15.4:1521/GIDSOLD1;
+}
+
+cw() {
+  if [ "$1" != "" ]; then
+    cd $1;
+    export WORK_DIR=`pwd`;
+  else                   
+    cd $WORK_DIR;
+  fi
+}  
+
+mvnpublish() {
+    mvn clean deploy; 
+    echo ">>>>>>>>>>> deploy done"
+    echo
+    echo
+    mvn release:clean;
+    echo ">>>>>>>>>>> release clean done"
+    echo 
+    echo
+    mvn release:prepare;
+    echo ">>>>>>>>>>> release prepare done"
+    echo 
+    echo
+    mvn release:perform;
+    echo ">>>>>>>>>>> release perform done"
+    echo 
+    echo
+}
+
+changed_files() {
+    git log --grep="$1" --name-only --pretty="%n" | sort -u
+}
+
+getuser() {
+    http GET http://serverstatus.gid.gap.com/getuser.php?accountname=$1 | grep "Name\|Email" | \
+        awk -F "<br>" '{sub(/</,""); print $2,$3}' | \
+        awk -F "<font color=blue>" '{print $1 $2}'
+}
+
+deploy_status() {
+    git lg origin/master ^heroku/master;
+}
+
+convert_to_utf() {
+    iconv -f iso-8859-15 -t utf-8 $1 > $2;
+}
+
+add_line_after_pattern_to_all() {
+    for i in $(fff $3)
+    do
+        add_line_after "$1" "$2" "$i" > /tmp/addLineAfter
+        mv /tmp/addLineAfter $i;
+    done
+}
+
+add_line_after() {
+    /usr/bin/awk -v pattern="$1" -v new_line="$2" '{ print $0; if ( $0 ~ pattern ) { print new_line; } }' < $3
+}
+
