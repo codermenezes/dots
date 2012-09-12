@@ -10,4 +10,4 @@ SYMBOL='∴' ;
 SYMBOL_='$' ;
 PROMPT_='\[\e[;37m\]'
 END_='\[\e[m\]' ;
-export PS1="$USER_\u@$HOST_\h: $PATH_$PWD $GIT_$GIT_REPO_$SEPARATOR_\n$SYMBOL_ $PROMPT_$END_"
+export PS1="$USER_\u@$HOST_\h: $PATH_\w $GIT_$GIT_REPO_$SEPARATOR_\n$SYMBOL_ $PROMPT_$END_"
