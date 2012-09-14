@@ -1,13 +1,32 @@
 # set up the terminal format
-USER_AND_HOST_='\[\e[0;34m\]' ;
-USER_='\[\e[0;34m\]' ;
-HOST_='\[\e[0;37m\]' ;
-PATH_='\[\e[;32m\]' ;
-GIT_='\[\e[;31m\]' ;
-GIT_REPO_='$(__git_ps1 "(%s) ")' ;
+__GREY__='\[\e[0;30m\]' ;
+__BLUE__='\[\e[0;34m\]' ;
+__WHITE__='\[\e[0;37m\]' ;
+__GREEN__='\[\e[;32m\]' ;
+__RED__='\[\e[;31m\]' ;
+GIT_REPO='$(__git_ps1 "(%s) ")' ;
 SEPARATOR_='\[\e[;31m\]' ;
-SYMBOL='∴' ;
-SYMBOL_='$' ;
-PROMPT_='\[\e[;37m\]'
+SYMBOL='$' ;
 END_='\[\e[m\]' ;
-export PS1="$USER_\u@$HOST_\h: $PATH_\w $GIT_$GIT_REPO_$SEPARATOR_\n$SYMBOL_ $PROMPT_$END_"
+
+_TIME="$__GREY__\t";
+_USER="$__BLUE__ \u@";
+_HOST="$__WHITE__\h:";
+_PATH="$__GREEN__\w";
+_GIT="$__RED__$GIT_REPO";
+_NEW_LINE="\n$SYMBOL ";
+_PROMPT="$__WHITE__$END_";
+
+
+export PS1="$_TIME$_USER$_HOST $_PATH $_GIT $_NEW_LINE $_PROMPT"
+
+#\!  # #History number of current command
+#\# # #Command number of current command
+#\d # #Current date
+#\h # #Host name
+#\n # #Newline
+#\s # #Shell name
+#\t # #Current time
+#\u # #User name
+#\W # #Current working directory
+#\w # #Current working directory (full path)
