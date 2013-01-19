@@ -26,9 +26,9 @@ alias br='cd /Users/filipesperandio/gid-git-svn/brazil-build'
 alias ww='cd $HOME/workspaces'
 alias easyretro='bundle exec rake start'
 alias rsync='/usr/bin/rsync --progress'
-alias deploy='git push heroku master'
 alias rr='source ~/.bashrc'
 alias deploy='git push heroku master'
+alias stage='git push test master'
 
 alias install_vim='brew install https://raw.github.com/adamv/homebrew-alt/master/duplicates/vim.rb'
 
@@ -51,3 +51,6 @@ alias r="rails"
 alias gp="cd ~/prj"
 # alias to current projects folder
 alias gc="cd ~/prj/current"
+alias start_mongo="mongod run --config /usr/local/Cellar/mongodb/2.0.0-x86_64/mongod.conf &";
+alias habits='history 500 | sed s/^[[:space:]]*[0-9]*[[:space:]]*// | sort | uniq -c | sort -n -r | head -n 20'
+alias qa='gg; cd qa/tests/browser'
