@@ -4,12 +4,15 @@ alias sl='ls';
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
+
 # make grep colorful
 alias cgrep='grep --color=auto -i'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
+
 # set localhost alias
 alias here="localhost"
+
 # set move and copy to be verbose
 alias mv="mv -v"
 alias cp="cp -v"
@@ -40,17 +43,33 @@ alias y=yeoman
 
 #add autocomplete for g alias
 complete -o bashdefault -o default -o nospace -F _git g
+
 #bundle aliases
+alias bundle-init="bundle install --path vendor/bundle --binstubs vendor/bundle/binstubs"
 alias b="bundle"
+alias bi="bundle-init"
 alias be="bundle exec"
-alias ber="bundle exec rake"
-alias bert="bundle exec rake environment RAILS_ENV=test"
+
 #rails alias
 alias r="rails"
+
+#rake alias
+alias rk="rake"
+alias rkt="RAILS_ENV=test rake"
+alias rks="rake spec"
+
+#rake db:migrate and db:seed alias
+alias m="rake db:migrate"
+alias mt="RAILS_ENV=test rake db:migrate"
+alias s="rake db:seed"
+
 # alias to projects folder
 alias gp="cd ~/prj"
+
 # alias to current projects folder
 alias gc="cd ~/prj/current"
 alias start_mongo="mongod run --config /usr/local/Cellar/mongodb/2.0.0-x86_64/mongod.conf &";
 alias habits='history 500 | sed s/^[[:space:]]*[0-9]*[[:space:]]*// | sort | uniq -c | sort -n -r | head -n 20'
 alias qa='gg; cd qa/tests/browser'
+alias pg_start="pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start"
+alias pg_stop="pg_ctl -D /usr/local/var/postgres stop -s -m fast"
