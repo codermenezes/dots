@@ -23,9 +23,9 @@ alias cp="cp -v"
 #esac
 #alias v="vim"
 alias g="git"
-export GG='/Users/filipesperandio/gid-git-svn/gid'
+export GG='/Users/fesperan/gid-git-svn/gid'
 alias gg='cd $GG'
-alias br='cd /Users/filipesperandio/gid-git-svn/brazil-build'
+alias br='cd /Users/fesperan/gid-git-svn/brazil-build'
 alias ww='cd $HOME/workspaces'
 alias easyretro='bundle exec rake start'
 alias rsync='/usr/bin/rsync --progress'
@@ -73,3 +73,22 @@ alias habits='history 500 | sed s/^[[:space:]]*[0-9]*[[:space:]]*// | sort | uni
 alias qa='gg; cd qa/tests/browser'
 alias pg_start="pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start"
 alias pg_stop="pg_ctl -D /usr/local/var/postgres stop -s -m fast"
+alias macroq_vm="rdesktop -r clipboard:CLIPBOARD -u fesperandio -d gid -p access4FE16 -a 24 -g 1280x700  -z sfvd-macroq-01.gid.gap.com"
+alias mount_macroq='mkdir /Volumes/macroq; mount -t smbfs "//fesperandio@sfvd-macroq-01.gid.gap.com/c$" /Volumes/macroq/'
+alias rebase_all='gg; for i in `ls`; do cd $i; g srb; cd ..; done;'
+alias ecom_workspace='/Users/fesperan/gid-git-svn/svn/eclipse/eclipse-jee-indigo-SR2-macosx-cocoa-x86_64/eclipse/eclipse -data /Users/fesperan/gid-git-svn/svn/ecom-ui-db/'
+
+alias gidcust='sqlplus.sh GIDCUST/GIDCUST@10.27.15.65:1521/GIDSOLD1'
+alias cdvim='cd ~/.vim'
+alias edvim='cdvim; vim'
+alias dots='cd ~/.dots'
+alias edots='dots; vim'
+
+alias be='bundle exec'
+alias iphone='open "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Applications/iPhone Simulator.app"'
+
+alias stop_postgres='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log stop'
+alias start_postgres='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start'
+
+alias ar='ack --ruby'
+alias pretty_json='python -mjson.tool'

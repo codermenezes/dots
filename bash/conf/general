@@ -10,8 +10,4 @@ source "$HOME/.dots/bash/conf/colors"
 #source the bashline configuration
 source "$HOME/.dots/bash/conf/bashline"
 
-
-export DYLD_LIBRARY_PATH="/usr/local/oracle/ohome/lib"
-export TNS_ADMIN="/usr/local/oracle/ohome/network/admin/"
-export ORACLE_HOME="/usr/local/oracle/ohome"
-export PATH=/usr/local/bin:$PATH
+export ANDROID_SDK_ROOT=/usr/local/opt/android-sdk

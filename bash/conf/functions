@@ -7,7 +7,7 @@ myfind() {
 }
 
 myfff() {
-    find . -iname "*$2*" -type "$1"
+  find . -iname "*$2*" -type "$1"
 }
 
 print_found() {
@@ -25,30 +25,30 @@ lf() { print_found; }
 fff() { myfff "f" "$1"; }
 
 ggfcode() {
-    if [ "$1" == "help" ]; then
-        echo "Usage: fcode <code> <file_pattern>"
-        echo "       fcode signedIn .java"
-        return;
-    fi
-    gg;
-    gg_grep_code $1 $2;
+  if [ "$1" == "help" ]; then
+    echo "Usage: fcode <code> <file_pattern>"
+    echo "       fcode signedIn .java"
+    return;
+  fi
+  gg;
+  gg_grep_code $1 $2;
 }
 ggfclass() {
-    gg;
-    find_on_dir "ecom" $1;
-    find_on_dir "components" $1;
+  gg;
+  find_on_dir "ecom" $1;
+  find_on_dir "components" $1;
 }
 gg_grep_code() {
-    find_on_dir "ecom" $2 | xargs grep -in $1;
-    find_on_dir "components" $2 |xargs grep -in $1;
+  find_on_dir "ecom" $2 | xargs grep -in $1;
+  find_on_dir "components" $2 |xargs grep -in $1;
 }
 
 find_on_dir() {
-    find $1 -iname "*$2*" -type "f" | grep -v test | grep -v bin;
+  find $1 -iname "*$2*" -type "f" | grep -v test | grep -v bin;
 }
 
 fcode() {
-    find_on_dir "." $2 | xargs grep -in $1;
+  find_on_dir "." $2 | xargs grep -in $1;
 }
 
 ff() { myfind "f" "$1"; }
@@ -56,7 +56,7 @@ ff() { myfind "f" "$1"; }
 fd() { myfind "d" "$1"; }
 
 fn() {
-    echo ${FFOUND};
+  echo ${FFOUND};
 
   [ ! -z ${FFOUND[$1-1]} ] && echo ${FFOUND_PWD}/${FFOUND[$1-1]};
 }
@@ -82,13 +82,13 @@ findproject() {
 }
 
 awkk() {
-    awk -F"$1" "{ print \$$2 }";
+  awk -F"$1" "{ print \$$2 }";
 }
 pkg-run() {
-  mvn clean;
-  mvn package;
-  echo "\n\nBUILD IS DONE ===> STARTING SERVER...\n\n";
-  sh target/bin/webapp;
+mvn clean;
+mvn package;
+echo "\n\nBUILD IS DONE ===> STARTING SERVER...\n\n";
+sh target/bin/webapp;
 }
 
 mvn_create() {
@@ -114,41 +114,43 @@ fixsubtitles() {
 }
 
 awkp() {
-    param1=$1;
-    awkparam="{ print \$$param1 }";
-    awk "$awkparam";
+  param1=$1;
+  awkparam="{ print \$$param1 }";
+  awk "$awkparam";
 }
 
 resolve_ecom() {
-    echo "Fixing perl..."
-    gg;
-    cd build/buildeng;
-    sed 's/<env key="VERSIONER_PERL_VERSION" value="5.8.9"\/>//' <dependency.xml > dependency-tmp.xml; 
-    mv dependency-tmp.xml dependency.xml;
-    br;
-    echo "rake components";
-    echo
-    echo
-    echo
-    rake components;
-    echo "rake ecom";
-    echo
-    echo
-    echo
-    rake ecom;
-    echo "Checking out original dependency.xml back"
-    gg;
-    cd build/buildeng;
-    git checkout dependency.xml;
+  echo "Fixing perl..."
+  gg;
+  cd build/buildeng;
+  sed 's/<env key="VERSIONER_PERL_VERSION" value="5.8.9"\/>//' <dependency.xml > dependency-tmp.xml; 
+  mv dependency-tmp.xml dependency.xml;
+  br;
+  echo "rake profile";
+  echo; echo; echo; echo;
+  rake profile;
+  
+  echo "rake components";
+  echo; echo; echo; echo;
+  rake components;
+
+  echo "rake ecom";
+  echo; echo; echo; echo;
+  rake ecom;
+
+  echo "Checking out original dependency.xml back"
+  gg;
+  cd build/buildeng;
+  git checkout dependency.xml;
 }
 
 setup_eclipse_tomcat() {
-    cd $HOME/tmp/workspaces/build/buildeng;
-    ./ant -Dalias=ecom -Dno.svn.access=true clean-tomcat-eclipse tomcat-eclipse
+  cd $HOME/tmp/workspaces/build/buildeng;
+  ./ant -Dalias=ecom -Dno.svn.access=true clean-tomcat-eclipse tomcat-eclipse
 }
 
 upi() {
-    echo $1 >> ~/setup.bkp/install.sh;
+  echo $1 >> ~/setup.bkp/install.sh;
 }
 
 poadb() {
@@ -158,99 +160,130 @@ poadb() {
 cw() {
   if [ "$1" != "" ]; then
     cd $1;
-    export WORK_DIR=`pwd`;
+    export CW_WORK_DIR=`pwd`;
   else                   
-    cd $WORK_DIR;
+    cd $CW_WORK_DIR;
   fi
 }  
 
 mvnpublish() {
-    mvn clean deploy; 
-    echo ">>>>>>>>>>> deploy done"
-    echo
-    echo
-    mvn release:clean;
-    echo ">>>>>>>>>>> release clean done"
-    echo 
-    echo
-    mvn release:prepare;
-    echo ">>>>>>>>>>> release prepare done"
-    echo 
-    echo
-    mvn release:perform;
-    echo ">>>>>>>>>>> release perform done"
-    echo 
-    echo
+  mvn clean deploy; 
+  echo ">>>>>>>>>>> deploy done"
+  echo
+  echo
+  mvn release:clean;
+  echo ">>>>>>>>>>> release clean done"
+  echo 
+  echo
+  mvn release:prepare;
+  echo ">>>>>>>>>>> release prepare done"
+  echo 
+  echo
+  mvn release:perform;
+  echo ">>>>>>>>>>> release perform done"
+  echo 
+  echo
 }
 
 changed_files() {
-    git log --grep="$1" --name-only --pretty="%n" | sort -u
+  git log --grep="$1" --name-only --pretty="%n" | sort -u
 }
 
 getuser() {
-    http GET http://serverstatus.gid.gap.com/getuser.php?accountname=$1 | grep "Name\|Email" | \
-        awk -F "<br>" '{sub(/</,""); print $2,$3}' | \
-        awk -F "<font color=blue>" '{print $1 $2}'
+  http GET http://serverstatus.gid.gap.com/getuser.php?accountname=$1 | grep "Name\|Email" | \
+    awk -F "<br>" '{sub(/</,""); print $2,$3}' | \
+    awk -F "<font color=blue>" '{print $1 $2}'
 }
 
 deploy_status() {
-    git lg origin/master ^heroku/master;
+  git lg origin/master ^heroku/master;
 }
 
 convert_to_utf() {
-    iconv -f iso-8859-15 -t utf-8 $1 > $2;
+  iconv -f iso-8859-15 -t utf-8 $1 > $2;
 }
 
-add_line_after_pattern_to_all() {
-    for i in $(fff $3)
-    do
-        add_line_after "$1" "$2" "$i" > /tmp/addLineAfter
-        mv /tmp/addLineAfter $i;
-    done
+add_line_to_all_files() {
+  if [ "$1" == "" ]
+  then
+    echo "Usage: add_lines_to_all_files <pattern_to_find> <line_to_add_after_pattern> <file_name_pattern_to_search> <pattern_to_exclude>";
+    return;
+  fi
+  
+  for i in $(find . -iname "*$3*" -type "f" | grep -v $4)
+  do
+    add_line_after "$1" "$2" "$i" > /tmp/addLineAfter
+    mv /tmp/addLineAfter $i;
+  done
 }
 
 add_line_after() {
-    /usr/bin/awk -v pattern="$1" -v new_line="$2" '{ print $0; if ( $0 ~ pattern ) { print new_line; } }' < $3
+  /usr/bin/awk -v pattern="$1" -v new_line="$2" '{ print $0; if ( $0 ~ pattern ) { print new_line; } }' < $3
 }
 
 function hex { echo "obase=16; $1" | bc; }
 
 send_commits() {
-    if [ "$#" -ne "2" ]; then echo "Usage: send_commits number-of-commits /path/to/mounted/workspace/project" >&2; return 1; fi
+  if [ "$#" -ne "2" ]; then echo "Usage: send_commits number-of-commits /path/to/mounted/workspace/project" >&2; return 1; fi
 
-    echo Starting...
-    git log --name-status -n "$1" | grep '^[ADM][[:space:]]\+.*/.*' | sort -k2 | uniq -f1 | while read status line;
+  echo Starting...
+  git log --name-status -n "$1" | grep '^[ADM][[:space:]]\+.*/.*' | sort -k2 | uniq -f1 | while read status line;
 do
-    from="$line";
-    to="${2}/${line#*/}";
-    case "$status" in
-        A|M)
-            echo "Copying from:"; echo "    ${from}"; echo "to"; echo "    ${to}";
-            mkdir -p "$(dirname "${to}")"
-            /bin/cp -f "${from}" "${to}"
-            ;;
-        D)
-            echo "Deleting file: $to"
-            /bin/rm -f "$to"
-            ;;
-    esac
-    echo "---- ---- ---- ---- ----"
+  from="$line";
+  #to="${2}/${line#*/}";
+  to="${2}/${line}";
+  case "$status" in
+    A|M)
+      echo "Copying from:"; echo "    ${from}"; echo "to"; echo "    ${to}";
+      mkdir -p "$(dirname "${to}")"
+      /bin/cp -f "${from}" "${to}"
+      ;;
+    D)
+      echo "Deleting file: $to"
+      /bin/rm -f "$to"
+      ;;
+  esac
+  echo "---- ---- ---- ---- ----"
 done
   }
 
   send_modified_files () { 
-      if [ "$#" -ne "1" ]; then
-          echo "Usage: send_modified_files /path/on/vm/to/workspace/project" 1>&2;
-          return 1;
-      fi;
-      git ls-files --modified | while read line;
+    if [ "$#" -ne "1" ]; then
+      echo "Usage: send_modified_files /path/on/vm/to/workspace/project" 1>&2;
+      return 1;
+    fi;
+    git ls-files --modified | while read line;
   do
-      from="$line";
-      to="${1}/${line#*/}";
-      echo /bin/cp -f "'${from}'" "'${to}'";
-      mkdir -p "$(dirname "${to}")";
-      /bin/cp -f "${from}" "${to}";
+    from="$line";
+    to="${1}/${line#*/}";
+    echo /bin/cp -f "'${from}'" "'${to}'";
+    mkdir -p "$(dirname "${to}")";
+    /bin/cp -f "${from}" "${to}";
   done
-  }
+}
 
+
+install_postgress() {
+  echo "
+  brew install postgresql
+  initdb /usr/local/var/postgres
+  mkdir -p ~/Library/LaunchAgents
+  cp /usr/local/Cellar/postgresql/9.0.4/org.postgresql.postgres.plist ~/Library/LaunchAgents/
+  launchctl load -w ~/Library/LaunchAgents/org.postgresql.postgres.plist
+  createdb DATABASE
+  "
+}
+
+android_scaffold() {
+  mvn archetype:generate \
+    -DarchetypeArtifactId=android-quickstart \
+    -DarchetypeGroupId=de.akquinet.android.archetypes \
+    -DarchetypeVersion=1.0.10 \
+    -DgroupId=com.github.filipesperandio \
+    -DartifactId=$1;
+}
+
+mygrep() {
+  grep -rni $* . --exclude-dir log --exclude-dir tmp
+}
 

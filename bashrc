@@ -16,6 +16,8 @@ source "$HOME/.dots/bash/conf/rvm"
 #source bash_completion configuration
 source "$HOME/.dots/bash/conf/bash_completion"
 
+source "$HOME/.dots/bash/conf/amplify"
+
 #source bash_profile.local if it exists
 if [ -e "$HOME/.bash_profile.local" ]; then
   source "$HOME/.bash_profile.local"
@@ -30,3 +32,5 @@ source "$ZZPATH"
 
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 source /Users/fesperan/.rvm/scripts/rvm
+PATH=/usr/local/oracle/bin:$PATH
+

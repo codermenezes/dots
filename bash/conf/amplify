@@ -1,0 +1,23 @@
+export WORKDIR=/Users/fesperan/amplify
+
+export M2_HOME=/usr/share/maven
+export MAVEN_OPTS="-Dandroid.lint.skip=true"
+export ANDROID_HOME=$ANDROID_SDK_ROOT
+export POSTGRES_HOME=/usr/local/opt/postgresql
+export PLAY_HOME=/usr/local/opt/play
+export PATH=$PLAY_HOME:$POSTGRES_HOME/bin:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$JAVA_HOME/bin:$PATH
+export JAVA_OPTS="-Xmx1024m -client -d32 -Djruby.compile.mode=OFF"
+
+export SCMP_SERVICES_USER=root
+export SCMP_SERVICES_PASS=root
+export RUN_JOBS=false
+
+alias amplify_postgres_stop='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log stop'
+alias amplify_postgres_start='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start'
+alias amplify_openfire='cd /usr/local/openfire/bin && ./openfire start > /dev/null; cd -'
+alias amplify_mysql_start='cd /usr/local/opt/mysql ; /usr/local/opt/mysql/bin/mysqld_safe & > /dev/null; cd -'
+
+alias aa="cd ~/amplify"
+alias amplify_portal='bundle exec rails server'
+alias amplify_scmp='bundle exec rails server -p 9002'
+alias amplify_sis='play "start 8888"'
