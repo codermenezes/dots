@@ -1,3 +1,4 @@
+# vim: ft=sh
 export WORKDIR=/Users/fesperan/amplify
 
 export M2_HOME=/usr/share/maven
@@ -5,12 +6,19 @@ export MAVEN_OPTS="-Dandroid.lint.skip=true"
 export ANDROID_HOME=$ANDROID_SDK_ROOT
 export POSTGRES_HOME=/usr/local/opt/postgresql
 export PLAY_HOME=/usr/local/opt/play
-export PATH=$PLAY_HOME:$POSTGRES_HOME/bin:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$JAVA_HOME/bin:$PATH
-export JAVA_OPTS="-Xmx1024m -client -d32 -Djruby.compile.mode=OFF"
+export PATH=$PLAY_HOME:$POSTGRES_HOME/bin:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$JAVA_HOME/bin:$HOME/amplify/amptools/bin:$PATH
+export JAVA_OPTS="-Xmx1024m -Djruby.compile.mode=OFF"
 
 export SCMP_SERVICES_USER=root
 export SCMP_SERVICES_PASS=root
+export PASS=root
 export RUN_JOBS=false
+
+
+export CB_STORE_LOCATION=amplify-developer.keystore
+export CB_KEY_ALIAS=amplify
+export CB_STORE_PASS=amplifydev
+export CB_KEY_PASS=amplifydev
 
 alias amplify_postgres_stop='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log stop'
 alias amplify_postgres_start='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start'
@@ -21,3 +29,187 @@ alias aa="cd ~/amplify"
 alias amplify_portal='bundle exec rails server'
 alias amplify_scmp='bundle exec rails server -p 9002'
 alias amplify_sis='play "start 8888"'
+alias amplify_deploy="cd ~/amplify/scmp_client; mvn_quick_build && ./resign.sh | xargs adb -d install -r -d"
+alias ca="cd $ANDROID_HOME/sources/android-17"
+alias lc="logcat-color *:S"
+
+
+amp() {
+  source_dir=$(pwd)
+  envs=(scmp portal sis alpha)
+
+  if [ "${1}" == "" ]; then
+    echo "Usage: amp <project> <command>"
+    echo "Projects:"
+    for p in $(echo ${envs[@]}); do echo "   ${p}"; done
+    echo "Commands:"
+    for c in up down tail cd; do echo "    ${c}"; done
+    return 1
+  fi
+
+  declare -A prj_dir
+  declare -A prj_cmd
+  declare -A prj_build
+
+  base_dir="${HOME}/amplify"
+
+  prj_dir[scmp]="scmp_services"
+  prj_build[scmp]="echo 'nothing to build'"
+  prj_cmd[scmp]="nohup -- bundle exec rails server -p 9002 &"
+
+  prj_dir[portal]="admin-portal"
+  prj_build[portal]="echo 'nothing to build'"
+  prj_cmd[portal]="nohup -- rails server &"
+  
+  prj_dir[sis]="sis"
+  prj_build[sis]="play clean compile stage"
+  prj_cmd[sis]="nohup -- ./target/start -Dseed.insert=true -Dseed.file=amp-integration-test-data.yml -Dhttp.port=8888 &"
+
+  prj_dir[alpha]="alpha_services"
+  prj_build[alpha]="play clean compile stage"
+  prj_cmd[alpha]="nohup -- ./target/start &"
+
+  env=${1}
+  working_dir=${prj_dir[$env]}
+  working_build=${prj_build[$env]}
+  working_cmd=${prj_cmd[$env]}
+
+  cd "${base_dir}/${working_dir}/"
+
+  case ${2} in
+    up )
+      [[ .rvmrc ]] && source .rvmrc
+      echo "Starting ${env}: ${working_cmd}"
+      rm nohup.out
+      echo "Build: ${working_build}"
+      [[ $working_build ]] && $working_build
+      ${working_cmd} 
+      echo $! > server.pid
+      ;;
+    down )
+      echo "Killing ${env}"
+      kill $(cat server.pid)
+      ;;
+    tail )
+      tail -f nohup.out
+      ;;
+    cd )
+      return
+      ;;
+    echo )
+      echo ${working_cmd}
+      ;;
+  esac
+
+  cd $source_dir
+}
+ 
+ci() {
+  RETURN_CODE=0
+  ci_recursion $@
+}
+ci_recursion() {
+  __GREEN__="\033[32m" 
+  __RED__="\033[31m" 
+  __WHITE__="\033[37m" 
+  COLOR=$__WHITE__
+
+  CONFIGURATION="${HOME}/.amp_resign_apk.conf" 
+  . ${CONFIGURATION}
+
+  ACCESS_KEY="${USER}%40amplify.com:${API_TOKEN}"
+
+  JENKINS="https://${ACCESS_KEY}@jenkins.ampaxs.com:8443"
+
+  JOB=${1}
+  DOWN_STREAM="${JENKINS}/job/${JOB}/api/json?tree=downstreamProjects[name]"
+  DOWN_STREAM_NAMES=$(curl -g -s -m 3 $DOWN_STREAM | perl -pe 's/.*?{"name":"(.*?)"},?(?:\]\})?/\1 /g' | grep -v '{"downstreamProjects":\[\]}' )
+  if [[ "$DOWN_STREAM_NAMES" != "" ]]; then
+    echo -e "${__WHITE__}Downstream projects for ${JOB}: ${DOWN_STREAM_NAMES}" 
+  fi
+
+  for downStreamProject in ${DOWN_STREAM_NAMES}
+  do
+    ci_recursion $downStreamProject 
+  done
+
+  JOB=${1}
+  JOB_URL="${JENKINS}/job/${JOB}/lastCompletedBuild/api/json?tree=result"
+  RESULT=$(curl -s -m 3 $JOB_URL | sed -n 's/.*"result":"\([A-Z]*\).*/\1/p')
+  
+  case "$RESULT" in
+    SUCCESS ) COLOR=$__GREEN__ ;;
+    * ) COLOR=$__RED__ ;;
+  esac
+
+  echo -e "${COLOR}${JOB} : ${RESULT} ${__WHITE__}"
+  echo $RESULT | grep SUCCESS > /dev/null
+  RETURN_CODE=$(($RETURN_CODE + $?))
+
+  if [[ "$FORCE" == "true" ]]; then
+    RETURN_CODE=0
+  fi
+
+  return $RETURN_CODE
+
+}
+
+amplify_download_apks() {
+  CONFIGURATION="${HOME}/.amp_resign_apk.conf" 
+  . ${CONFIGURATION}
+
+  ACCESS_KEY="${USER}%40amplify.com:${API_TOKEN}"
+
+  JENKINS="https://${ACCESS_KEY}@jenkins.ampaxs.com:8443"
+  cd /tmp
+
+  rm -rf apks
+
+  curl ${JENKINS}/job/notebook-client/lastSuccessfulBuild/artifact/target/*zip*/target.zip > target.zip
+  unzip target.zip
+  tar -xf ./target/*.tgz
+  rm target.zip && rm -rf target
+
+  curl ${JENKINS}/job/amp-client/lastSuccessfulBuild/artifact/target/*zip*/target.zip > target.zip
+  unzip target.zip
+  rm target.zip
+
+  curl ${JENKINS}/job/Registration/lastSuccessfulBuild/artifact/target/*zip*/target.zip > target.zip
+  unzip target.zip
+  rm target.zip
+
+  mv ./target/*.apk apks
+
+  rm -rf target
+
+  rm apks/*debug.apk
+}
+
+resign() {
+  rm -rf unpacked
+  rm app-debug.apk
+  mkdir unpacked
+  unzip $1 -d unpacked/
+  cd unpacked
+  rm -rf META-INF/
+  zip -r ../app-debug.apk *
+  jarsigner -verbose -keystore $CB_STORE_LOCATION -sigalg SHA1withRSA -digestalg SHA1 -storepass $CB_STORE_PASS -keypass $CB_KEY_PASS app-debug.apk $CB_KEY_ALIAS
+  cd ..
+}
+
+portal_login() {
+  CREDNTAILS=$(cat /Users/fesperan/amplify/admin-portal/features/step_definitions/login_steps.rb | grep "email\|password" | head -n2 | awk -F'email\|password' '{print $2}' | cut -d'"' -f2 |xargs)
+  case "$1" in
+    user)
+      user=$(echo $CREDNTAILS | awk '{print $1}')
+      echo $user 
+      echo $user | pbcopy
+      ;;
+    pass|password)
+      pass=$(echo $CREDNTAILS | awk '{print $2}')
+      echo $pass
+      echo $pass | pbcopy
+      ;;
+  esac
+  
+}
