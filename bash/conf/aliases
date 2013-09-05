@@ -73,7 +73,7 @@ alias habits='history 500 | sed s/^[[:space:]]*[0-9]*[[:space:]]*// | sort | uni
 alias qa='gg; cd qa/tests/browser'
 alias pg_start="pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start"
 alias pg_stop="pg_ctl -D /usr/local/var/postgres stop -s -m fast"
-alias macroq_vm="rdesktop -r clipboard:CLIPBOARD -u fesperandio -d gid -p access4FE16 -a 24 -g 1280x700  -z sfvd-macroq-01.gid.gap.com"
+alias rdp="rdesktop -r clipboard:CLIPBOARD -a 24 -g 1280x700  -z "
 alias mount_macroq='mkdir /Volumes/macroq; mount -t smbfs "//fesperandio@sfvd-macroq-01.gid.gap.com/c$" /Volumes/macroq/'
 alias rebase_all='gg; for i in `ls`; do cd $i; g srb; cd ..; done;'
 alias ecom_workspace='/Users/fesperan/gid-git-svn/svn/eclipse/eclipse-jee-indigo-SR2-macosx-cocoa-x86_64/eclipse/eclipse -data /Users/fesperan/gid-git-svn/svn/ecom-ui-db/'
@@ -92,3 +92,6 @@ alias start_postgres='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgr
 
 alias ar='ack --ruby'
 alias pretty_json='python -mjson.tool'
+alias mvn_quick_build='mvn clean install -Dmaven.test.skip=true -Dandroid.lint.skip=true -Dpmd.skip=true -Dversion.code=3000 -Psign'
+alias cd..="cd .." 
+alias gms="git multi status"
