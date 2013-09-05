@@ -34,3 +34,4 @@ PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 source /Users/fesperan/.rvm/scripts/rvm
 PATH=/usr/local/oracle/bin:$PATH
 
+export PATH=~/bin:$PATH
