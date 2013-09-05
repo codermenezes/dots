@@ -4,21 +4,27 @@ __BLUE__='\[\e[0;34m\]' ;
 __WHITE__='\[\e[0;37m\]' ;
 __GREEN__='\[\e[;32m\]' ;
 __RED__='\[\e[;31m\]' ;
-GIT_REPO='$(__git_ps1 "(%s) ")' ;
+
 SEPARATOR_='\[\e[;31m\]' ;
 SYMBOL='$' ;
 END_='\[\e[m\]' ;
+
+GIT_REPO='$(__git_ps1 "(%s) ")' ;
+git_not_pushed(){
+    not_pushed=$(git log --pretty="%h" origin/master..master 2>/dev/null | wc -l | xargs)
+    [[ "$not_pushed" != "0" ]] && echo "(${not_pushed} commits ahead)" || echo " "
+}
 
 _TIME="$__GREY__\t";
 _USER="$__BLUE__ \u@";
 _HOST="$__WHITE__\h:";
 _PATH="$__GREEN__\w";
-_GIT="$__RED__$GIT_REPO";
-_NEW_LINE="\n$SYMBOL ";
-_PROMPT="$__WHITE__$END_";
+_GIT="$__RED__$GIT_REPO $__GREY__\$(git_not_pushed)";
+_NEW_LINE="\n";
+_PROMPT="$__RED__$SYMBOL $END_";
 
 
-export PS1="$_TIME$_USER$_HOST $_PATH $_GIT $_NEW_LINE $_PROMPT"
+export PS1="$_TIME$_USER$_HOST $_PATH $_GIT $_NEW_LINE$_PROMPT"
 
 #\!  # #History number of current command
 #\# # #Command number of current command
