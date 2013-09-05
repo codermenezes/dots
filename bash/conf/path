@@ -1,5 +1,6 @@
 # set the PATH environment variable
 PATH=$PATH
+PATH="$HOME/bin:$PATH"
 PATH="$HOME/Dropbox/bin:$PATH"
 PATH="$HOME/node_modules/.bin:$PATH"
 PATH="/usr/local/share/python:$PATH"
