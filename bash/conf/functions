@@ -68,7 +68,7 @@ d() { cd $(dirname $(fn "$1")); }
 c() { cat $(fn "$1"); }
 
 edit() {
-  vim $HOME/.dots/bash/conf/$1
+  (cd $HOME/.dots && vim bash/conf/$1)
 }
 
 scaffold() {
@@ -284,6 +284,48 @@ android_scaffold() {
 }
 
 mygrep() {
-  grep -rni $* . --exclude-dir log --exclude-dir tmp
+  grep -rni $* . --exclude-dir log --exclude-dir tmp --exclude-dir coverage
+}
+
+mvn_new() {
+  mvn archetype:generate \
+    -DarchetypeGroupId=org.apache.maven.archetypes \
+    -DgroupId=com.mycompany.app \
+    -DartifactId=my-app
+}
+
+checkbuild() {
+  case ${1} in
+    on )
+      defaults write com.tomato.Checkman stickies.disabled -bool NO
+      ;;
+    off )
+      defaults write com.tomato.Checkman stickies.disabled -bool YES
+      ;;
+    esac 
+}
+
+migrate_all() {
+  for i in development test
+  do
+    echo ${i}
+    RAILS_ENV=${i} rake db:migrate
+  done
+}
+
+testflight() {
+ curl http://testflightapp.com/api/builds.json \
+    -F file=@${1} \
+    -F api_token='e0e9f3faa676bb3077ed7f3b3cdef6e9_MTE5NTE1ODIwMTMtMDctMjUgMTM6MjY6MTAuMzkxOTc3' \
+    -F team_token='c369a780008f36d39f96a0aa1bfb52d3_MjUyMzYwMjAxMy0wNy0yNSAxMzo1NjoyMy42Njg5Mjg' \
+    -F notes='This build was uploaded via the upload API' \
+    -F notify=True \
+    -F distribution_lists='Internal, QA';
+}
+
+prj() {
+  [[ ! ${1} ]] && cd $(cat ~/.current_project) && return;
+  cd ${1};
+  echo $(pwd) >  ~/.current_project;
 }
 
