@@ -12,6 +12,7 @@ export JAVA_OPTS="-Xmx1024m -Djruby.compile.mode=OFF"
 export SCMP_SERVICES_USER=root
 export SCMP_SERVICES_PASS=root
 export PASS=root
+export MYSQL_PASSWORD=root
 export RUN_JOBS=false
 
 
@@ -29,12 +30,13 @@ alias aa="cd ~/amplify"
 alias amplify_portal='bundle exec rails server'
 alias amplify_scmp='bundle exec rails server -p 9002'
 alias amplify_sis='play "start 8888"'
-alias amplify_deploy="cd ~/amplify/scmp_client; mvn_quick_build && ./resign.sh | xargs adb -d install -r -d"
+
+alias amplify_deploy="sed -i.bkp 's/Utils.enableUsbDebugging(false/Utils.enableUsbDebugging(true/'  ./src/main/java/com/amplify/amp/services/AMPAgentService.java && mvn_quick_build && adb -d install -r -d target/amp-client-1.0-SNAPSHOT.apk; rm ./src/main/java/com/amplify/amp/services/AMPAgentService.java.bkp "
 alias ca="cd $ANDROID_HOME/sources/android-17"
 alias lc="logcat-color *:S"
+alias boot_broadscast='adb shell am broadcast -a android.intent.action.BOOT_COMPLETED '
 
-
-amp() {
+__amp() {
   source_dir=$(pwd)
   envs=(scmp portal sis alpha)
 

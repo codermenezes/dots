@@ -92,6 +92,7 @@ alias start_postgres='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgr
 
 alias ar='ack --ruby'
 alias pretty_json='python -mjson.tool'
-alias mvn_quick_build='mvn clean install -Dmaven.test.skip=true -Dandroid.lint.skip=true -Dpmd.skip=true -Dversion.code=3000 -Psign'
+alias mvn_quick_build='mvn clean install -Dmaven.test.skip=true -Dandroid.lint.skip=true -Dpmd.skip=true -Dversion.code=300000 -Psign'
 alias cd..="cd .." 
 alias gms="git multi status"
+alias groovedown="java -jar /Applications/GrooveDown.jar" 

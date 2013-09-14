@@ -329,3 +329,11 @@ prj() {
   echo $(pwd) >  ~/.current_project;
 }
 
+parse_json() {
+  attrs=""
+  for i in $*;
+  do
+      attrs=$attrs"['$i']"
+  done
+  ruby -e "require 'json'; puts JSON.parse(STDIN.read)$attrs"; 
+}
