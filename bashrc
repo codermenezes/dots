@@ -1,4 +1,3 @@
-date
 source /opt/boxen/env.sh
 
 source "$HOME/.dots/bash/conf/path"
@@ -32,6 +31,6 @@ export EDITOR=vim
 # set the term to have 256 colors
 export TERM=xterm-256color
 
-
 export ANDROID_SDK_ROOT=/opt/boxen/homebrew/Cellar/android-sdk/22.0.5
-date
+export PATH=~/bin:$PATH
+

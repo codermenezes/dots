@@ -88,11 +88,10 @@ alias mvn_quick_build='mvn clean install -Dmaven.test.skip=true -Dandroid.lint.s
 alias cd..="cd .." 
 alias gms="git multi status"
 alias groovedown="java -jar /Applications/GrooveDown.jar" 
+
 alias disable_minimize_using_cmd_m="defaults write -g NSUserKeyEquivalents -dict-add 'Minimize' '\0'"
 alias add_boxen='(cd /opt/boxen/repo && vim)'
 alias bwer=brew
 alias brwe=brew
 
 alias asource="cd $ANDROID_HOME"
-alias postgres_stop='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log stop -s -m fast'
-alias postgres_start='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start'

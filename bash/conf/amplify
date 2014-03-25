@@ -10,6 +10,9 @@ export PATH=$PLAY_HOME:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$JAVA_HO
 export JAVA_OPTS="-Xmx1024m -Djruby.compile.mode=OFF -Djava.awt.headless=true"
 
 export SCMP_SERVICES_USER=root
+export SCMP_SERVICES_PASS=root
+export PASS=root
+export MYSQL_PASSWORD=root
 export RUN_JOBS=false
 
 export MYSQL_PASSWORD=
@@ -26,16 +29,8 @@ alias amplify_openfire='cd /usr/local/openfire/bin && ./openfire start > /dev/nu
 alias amplify_mysql_start='cd /usr/local/opt/mysql ; /usr/local/opt/mysql/bin/mysqld_safe & > /dev/null; cd -'
 
 alias aa="cd ~/amplify"
-alias amplify_portal='bundle exec rails server'
-alias amplify_scmp='bundle exec rails server -p 9002'
-alias amplify_sis='play "start 8888"'
-
-alias amplify_deploy="mvn_quick_build && adb -d install -r -d target/amp-client-1.0-SNAPSHOT.apk"
-alias ca="cd $ANDROID_HOME/sources/android-17"
 alias lc="logcat-color *:S"
 alias boot_broadscast='adb shell am broadcast -a android.intent.action.BOOT_COMPLETED '
-alias db="mysql -u root scmp_services_development" 
-alias jira=amp-jira-me
 
 ci() {
   RETURN_CODE=0
