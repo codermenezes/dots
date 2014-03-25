@@ -1,7 +1,3 @@
-[user]
-  name = Joao Vortmann
-  email = jvortmann@gmail.com
-
 [color]
   status = auto
   branch = auto
