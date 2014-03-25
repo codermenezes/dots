@@ -1,5 +1,5 @@
 # make ls colorful
-alias ls='ls -1 -G';
+alias ls='gls -1 --color';
 alias sl='ls';
 alias ll='ls -alF'
 alias la='ls -A'
@@ -15,16 +15,15 @@ alias here="localhost"
 
 # set move and copy to be verbose
 alias mv="mv -v"
-alias cp="cp -v"
-#alias vi="vim"
+alias cp="gcp -v"
+alias vi="vim"
 #case `uname -s` in
 # 'Linux') if type -p gvim &>/dev/null; then alias vim="gvim"; fi ;;
 # 'Darwin') if type -p mvim &>/dev/null; then alias vim="mvim"; fi ;;
 #esac
-#alias v="vim"
+alias v="vim"
+alias vim="mvim -v"
 alias g="git"
-export GG='/Users/fesperan/gid-git-svn/gid'
-alias gg='cd $GG'
 alias br='cd /Users/fesperan/gid-git-svn/brazil-build'
 alias ww='cd $HOME/workspaces'
 alias easyretro='bundle exec rake start'
@@ -70,12 +69,8 @@ alias gp="cd ~/prj"
 alias gc="cd ~/prj/current"
 alias start_mongo="mongod run --config /usr/local/Cellar/mongodb/2.0.0-x86_64/mongod.conf &";
 alias habits='history 500 | sed s/^[[:space:]]*[0-9]*[[:space:]]*// | sort | uniq -c | sort -n -r | head -n 20'
-alias qa='gg; cd qa/tests/browser'
-alias pg_start="pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start"
-alias pg_stop="pg_ctl -D /usr/local/var/postgres stop -s -m fast"
 alias rdp="rdesktop -r clipboard:CLIPBOARD -a 24 -g 1280x700  -z "
 alias mount_macroq='mkdir /Volumes/macroq; mount -t smbfs "//fesperandio@sfvd-macroq-01.gid.gap.com/c$" /Volumes/macroq/'
-alias rebase_all='gg; for i in `ls`; do cd $i; g srb; cd ..; done;'
 alias ecom_workspace='/Users/fesperan/gid-git-svn/svn/eclipse/eclipse-jee-indigo-SR2-macosx-cocoa-x86_64/eclipse/eclipse -data /Users/fesperan/gid-git-svn/svn/ecom-ui-db/'
 
 alias gidcust='sqlplus.sh GIDCUST/GIDCUST@10.27.15.65:1521/GIDSOLD1'
@@ -87,11 +82,17 @@ alias edots='dots; vim'
 alias be='bundle exec'
 alias iphone='open "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Applications/iPhone Simulator.app"'
 
-alias stop_postgres='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log stop'
-alias start_postgres='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start'
-
 alias ar='ack --ruby'
 alias pretty_json='python -mjson.tool'
-alias mvn_quick_build='mvn clean install -Dmaven.test.skip=true -Dandroid.lint.skip=true -Dpmd.skip=true -Dversion.code=3000 -Psign'
+alias mvn_quick_build='mvn clean install -Dmaven.test.skip=true -Dandroid.lint.skip=true -Dpmd.skip=true -Dversion.code=300000 -Psign'
 alias cd..="cd .." 
 alias gms="git multi status"
+alias groovedown="java -jar /Applications/GrooveDown.jar" 
+alias disable_minimize_using_cmd_m="defaults write -g NSUserKeyEquivalents -dict-add 'Minimize' '\0'"
+alias add_boxen='(cd /opt/boxen/repo && vim)'
+alias bwer=brew
+alias brwe=brew
+
+alias asource="cd $ANDROID_HOME"
+alias postgres_stop='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log stop -s -m fast'
+alias postgres_start='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start'

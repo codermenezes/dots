@@ -4,23 +4,27 @@ PATH="$HOME/bin:$PATH"
 PATH="$HOME/Dropbox/bin:$PATH"
 PATH="$HOME/node_modules/.bin:$PATH"
 PATH="/usr/local/share/python:$PATH"
-PATH="/usr/local/oracle/ohome/bin:$PATH"
 PATH="/usr/local/share:$PATH"
 PATH="/usr/local/sbin:$PATH"
 PATH="/usr/bin:$PATH"
 PATH="/usr/sbin:$PATH"
 PATH="/bin:$PATH"
 PATH="/sbin:$PATH"
-PATH="/usr/local/bin:$PATH"
 PATH="$HOME/workspaces/vraptor-scaffold/bin:$PATH"
 PATH="$(brew --prefix coreutils)/libexec/gnubin):$PATH"
-export PATH
 
-export JAVA_HOME=/Library/Java/Home
-
+PATH="/opt/boxen/homebrew/bin/:$PATH"
+PATH="/usr/local/bin:$PATH"
 
 # Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
 
 # add local binstubs to the beginning of the path
 export PATH="vendor/bundle/binstubs:$PATH"
+
+export M2_HOME=/usr/share/maven
+export JAVA_HOME=/Library/Java/Home
+
+export POSTGRES_HOME=/opt/boxen/homebrew/opt/postgresql/
+
+export PATH=$POSTGRES_HOME/bin:$PATH

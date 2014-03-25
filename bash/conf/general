@@ -10,4 +10,7 @@ source "$HOME/.dots/bash/conf/colors"
 #source the bashline configuration
 source "$HOME/.dots/bash/conf/bashline"
 
-export ANDROID_SDK_ROOT=/usr/local/opt/android-sdk
+export ANDROID_SDK_ROOT=/opt/boxen/homebrew/Cellar/android-sdk/22.0.5
+
+eval "$(hub alias -s)"
+

@@ -4,24 +4,24 @@ export WORKDIR=/Users/fesperan/amplify
 export M2_HOME=/usr/share/maven
 export MAVEN_OPTS="-Dandroid.lint.skip=true"
 export ANDROID_HOME=$ANDROID_SDK_ROOT
-export POSTGRES_HOME=/usr/local/opt/postgresql
+export PATH=$ANDROID_HOME/tools:$PATH
 export PLAY_HOME=/usr/local/opt/play
-export PATH=$PLAY_HOME:$POSTGRES_HOME/bin:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$JAVA_HOME/bin:$HOME/amplify/amptools/bin:$PATH
-export JAVA_OPTS="-Xmx1024m -Djruby.compile.mode=OFF"
+export PATH=$PLAY_HOME:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$JAVA_HOME/bin:$HOME/amplify/amptools/bin:$PATH
+export JAVA_OPTS="-Xmx1024m -Djruby.compile.mode=OFF -Djava.awt.headless=true"
 
 export SCMP_SERVICES_USER=root
-export SCMP_SERVICES_PASS=root
-export PASS=root
 export RUN_JOBS=false
 
+export MYSQL_PASSWORD=
 
-export CB_STORE_LOCATION=amplify-developer.keystore
+
+export CB_STORE_LOCATION=/Users/Thoughtworker/amplify/notebook-client/amplify-developer.keystore
 export CB_KEY_ALIAS=amplify
 export CB_STORE_PASS=amplifydev
 export CB_KEY_PASS=amplifydev
+alias unset_keys='unset CB_STORE_LOCATION; unset CB_KEY_ALIAS; unset CB_STORE_PASS; unset CB_KEY_PASS'
 
-alias amplify_postgres_stop='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log stop'
-alias amplify_postgres_start='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start'
+
 alias amplify_openfire='cd /usr/local/openfire/bin && ./openfire start > /dev/null; cd -'
 alias amplify_mysql_start='cd /usr/local/opt/mysql ; /usr/local/opt/mysql/bin/mysqld_safe & > /dev/null; cd -'
 
@@ -29,12 +29,15 @@ alias aa="cd ~/amplify"
 alias amplify_portal='bundle exec rails server'
 alias amplify_scmp='bundle exec rails server -p 9002'
 alias amplify_sis='play "start 8888"'
-alias amplify_deploy="cd ~/amplify/scmp_client; mvn_quick_build && ./resign.sh | xargs adb -d install -r -d"
+
+alias amplify_deploy="mvn_quick_build && adb -d install -r -d target/amp-client-1.0-SNAPSHOT.apk"
 alias ca="cd $ANDROID_HOME/sources/android-17"
 alias lc="logcat-color *:S"
+alias boot_broadscast='adb shell am broadcast -a android.intent.action.BOOT_COMPLETED '
+alias db="mysql -u root scmp_services_development" 
+alias jira=amp-jira-me
 
-
-amp() {
+__amp() {
   source_dir=$(pwd)
   envs=(scmp portal sis alpha)
 
@@ -112,10 +115,11 @@ ci_recursion() {
   __GREEN__="\033[32m" 
   __RED__="\033[31m" 
   __WHITE__="\033[37m" 
+  __YELLOW__="\033[33m" 
   COLOR=$__WHITE__
 
-  CONFIGURATION="${HOME}/.amp_resign_apk.conf" 
-  . ${CONFIGURATION}
+  USER=fesperandio
+  API_TOKEN='65f8255daefebd57e433ee147ee7d68c'
 
   ACCESS_KEY="${USER}%40amplify.com:${API_TOKEN}"
 
@@ -124,9 +128,9 @@ ci_recursion() {
   JOB=${1}
   DOWN_STREAM="${JENKINS}/job/${JOB}/api/json?tree=downstreamProjects[name]"
   DOWN_STREAM_NAMES=$(curl -g -s -m 3 $DOWN_STREAM | perl -pe 's/.*?{"name":"(.*?)"},?(?:\]\})?/\1 /g' | grep -v '{"downstreamProjects":\[\]}' )
-  if [[ "$DOWN_STREAM_NAMES" != "" ]]; then
-    echo -e "${__WHITE__}Downstream projects for ${JOB}: ${DOWN_STREAM_NAMES}" 
-  fi
+  #if [[ "$DOWN_STREAM_NAMES" != "" ]]; then
+  #  echo -e "${__WHITE__}Downstream projects for ${JOB}: ${DOWN_STREAM_NAMES}" 
+  #fi
 
   for downStreamProject in ${DOWN_STREAM_NAMES}
   do
@@ -139,6 +143,7 @@ ci_recursion() {
   
   case "$RESULT" in
     SUCCESS ) COLOR=$__GREEN__ ;;
+    UNSTABLE ) COLOR=$__YELLOW__ ;;
     * ) COLOR=$__RED__ ;;
   esac
 
@@ -198,7 +203,7 @@ resign() {
 }
 
 portal_login() {
-  CREDNTAILS=$(cat /Users/fesperan/amplify/admin-portal/features/step_definitions/login_steps.rb | grep "email\|password" | head -n2 | awk -F'email\|password' '{print $2}' | cut -d'"' -f2 |xargs)
+  CREDNTAILS=$(cat /Users/fesperan/amplify/admin-portal/features/support/users_credentials.rb | grep "email\|password" | head -n2 | awk -F'email\|password' '{print $2}' | cut -d'"' -f2 |xargs)
   case "$1" in
     user)
       user=$(echo $CREDNTAILS | awk '{print $1}')
@@ -212,4 +217,30 @@ portal_login() {
       ;;
   esac
   
+}
+
+amp_client_build() {
+  mvn clean install -Dmaven.test.skip=true -Dandroid.lint.skip=true -Dpmd.skip=true -Dversion.code=500000 -Psign -Dservices.url=`whatsmyip en0`
+}
+
+fix_repo() {
+  repo=${1:-"bitbucket_tw"}
+  new_repo_line=$(git remote -v | grep origin | head -n1 | sed "s/bitbucket.org/${repo}/" | cut -d" " -f1)
+  git remote rm origin
+  git remote add $new_repo_line
+  git fetch origin 
+  git branch --set-upstream-to=origin/master master
+  git remote -v
+}
+
+all_apks() {
+  aa;
+  mkdir apks;
+  find . -name "*.apk" | xargs -J % cp % apks
+}
+
+clear_all() {
+  adb shell pm clear com.amplify.amp
+  adb shell pm clear com.amplify.registration
+  adb reboot
 }
