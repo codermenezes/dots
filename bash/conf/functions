@@ -271,6 +271,11 @@ install_postgress() {
   cp /usr/local/Cellar/postgresql/9.0.4/org.postgresql.postgres.plist ~/Library/LaunchAgents/
   launchctl load -w ~/Library/LaunchAgents/org.postgresql.postgres.plist
   createdb DATABASE
+  psql postgres -c 'CREATE EXTENSION \"adminpack\";'
+  psql postgres -c 'CREATE USER root WITH PASSWORD \"root\";'
+  psql postgres -c 'CREATE database dogstyle_development'
+  psql postgres -c \"GRANT ALL PRIVILEGES to root;\"
+  psql postgres -c \"GRANT ALL PRIVILEGES ON DATABASE dogbis_development to root;\"
   "
 }
 
@@ -329,3 +334,56 @@ prj() {
   echo $(pwd) >  ~/.current_project;
 }
 
+parse_json() {
+  attrs=""
+  for i in $*;
+  do
+    local regex='^[0-9]+$'
+    local param=$([[ ${i} =~ ${regex} ]] && echo  ${i} || echo "'${i}'" )
+    attrs=$attrs"[${param}]"
+  done
+  ruby -e "require 'json'; parsed = JSON.parse(STDIN.read)$attrs; puts parsed.to_json"; 
+}
+
+cordova_deploy() {
+  file=${2:-"www/js/angular-init.js"}
+  temp_file="/tmp/temp_file"
+  ip=$(ifconfig en0 | grep inet | tail -n1 | awk '{print $2}')
+  echo "updating server ip to ${ip}"
+  cat $file | sed "s/localhost/${ip}/" > $temp_file 
+  mv $temp_file $file
+  echo "build ${1}"
+  cordova build ${1}
+  echo "run ${1}"
+  cordova run ${1}
+  echo "reverting server ip"
+  cat $file | sed "s/${ip}/localhost/" > $temp_file 
+  mv $temp_file $file
+}
+
+droid_at_screen() {
+  java -jar ~/bin/droidAtScreen.jar
+}
+
+
+concentrate() {
+  (cd /Volumes/HD/bkp_macpipo/Music/ && herrie -p Dream\ Theater/ dream_theater/ Foo\ Fighters/ Eric\ Clapton/)
+}
+
+delete_empty_lines() {
+ sed '/^[ ]*$/d' 
+}
+
+log() { echo $@ 1>&2; }
+
+resize() {
+  local size=$1
+  convert  -resize $size -background white -extent ${size}x${size} -gravity center $2 $3
+}
+
+new_ruby_project() {
+  git clone --depth=1 git@github.com:DivineDominion/rspec-guard-spork-boilerplate.git $1
+  cd $1
+  rm -rf .git
+  git init
+}
