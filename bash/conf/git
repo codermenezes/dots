@@ -1,0 +1,5 @@
+__git_ps1() {
+    echo '';
+}
+
+eval "$(hub alias -s)"
