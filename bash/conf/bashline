@@ -16,8 +16,8 @@ git_not_pushed(){
 }
 
 _TIME="$__GREY__\t";
-_USER="$__BLUE__ \u@";
-_HOST="$__WHITE__\h:";
+#_USER="$__BLUE__ \u@";
+#_HOST="$__WHITE__\h:";
 _PATH="$__GREEN__\w";
 _GIT="$__RED__$GIT_REPO $__GREY__\$(git_not_pushed)";
 _NEW_LINE="\n";
