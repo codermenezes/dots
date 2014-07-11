@@ -25,7 +25,7 @@ alias v="vim"
 alias vim="mvim -v"
 alias g="git"
 alias br='cd /Users/fesperan/gid-git-svn/brazil-build'
-alias ww='cd $HOME/workspaces'
+alias ww='cd ~/workspaces/$(ls -1 --color=never ~/workspaces | selecta)'
 alias easyretro='bundle exec rake start'
 alias rsync='/usr/bin/rsync --progress'
 alias rr='source ~/.bashrc'
