@@ -1,3 +1,5 @@
+export ANDROID_SDK_ROOT=/opt/boxen/homebrew/Cellar/android-sdk/22.0.5
+
 source /opt/boxen/env.sh
 
 source "$HOME/.dots/bash/conf/path"
@@ -17,6 +19,7 @@ source "$HOME/.dots/bash/conf/git"
 source "$HOME/.dots/bash/conf/bash_completion"
 
 source "$HOME/.dots/bash/conf/npm"
+source "$HOME/.dots/bash/conf/nvm"
 
 source "$HOME/.dots/bash/conf/amplify"
 
@@ -31,6 +34,6 @@ export EDITOR=vim
 # set the term to have 256 colors
 export TERM=xterm-256color
 
-export ANDROID_SDK_ROOT=/opt/boxen/homebrew/Cellar/android-sdk/22.0.5
 export PATH=~/bin:$PATH
+
 
