@@ -1,0 +1,50 @@
+#!/usr/bin/expect -f
+#
+# VIPAccess.exp
+#
+# Command-line emulation of Symantec's VIP Access software token.
+# Usage:
+#  ./VIPAccess.exp [v]
+# If the "v" argument (or any argument) is specified, verbose output
+# will be produced on stderr.  The OTP value will be output on stdout.
+#
+set timeout 10
+log_user 0
+set aes_key D0D0D0E0D0D0DFDFDF2C34323937D7AE
+set keychain /Users/$env(USER)/Library/Keychains/VIPAccess.keychain
+proc vlog { s } { if $::argc { puts stderr $s } }
+
+vlog "Finding machine serial number (used by VIPAccess to secure the keychain.):"
+spawn /bin/sh -c "ioreg -rac IOPlatformExpertDevice | xpath 'plist/array/dict/key\[.=\"IOPlatformSerialNumber\"\]/following-sibling::*\[position()=1\]/text()' 2>/dev/null"
+expect eof
+set serial $expect_out(buffer)
+vlog "    $serial"
+
+vlog "Reading encrypted Credential ID and OTP secret key from $keychain:"
+spawn security unlock-keychain $keychain
+expect "password to unlock $keychain: "
+send "${serial}SymantecVIPAccess$env(USER)\n"
+expect eof
+spawn security find-generic-password -gl CredentialStore $keychain
+expect -re \"acct\"<blob>=\"\(\[a-zA-Z0-9/+\]+=\)\"
+set id_crypt $expect_out(1,string)
+vlog "    $id_crypt"
+expect -re password:\ \"\(\[a-zA-Z0-9/+\]+=\)\"
+set key_crypt $expect_out(1,string)
+vlog "    $key_crypt"
+
+vlog "Decrypting Credential ID and OTP key:"
+spawn /bin/sh -c "openssl enc -aes-128-cbc -d -K $aes_key -iv 0 -a <<< '$id_crypt'"
+expect -re \(.*\)Symantec
+set id_plain $expect_out(1,string)
+vlog "    $id_plain"
+spawn /bin/sh -c "openssl enc -aes-128-cbc -d -K $aes_key -iv 0 -a <<< '$key_crypt' | xxd -p"
+expect -re \[0-9a-f\]+
+set key_plain $expect_out(0,string)
+vlog "    $key_plain"
+
+vlog "Generating current OTP using secret key."
+spawn oathtool --totp $key_plain
+expect -re \\d+
+set otp $expect_out(0,string)
+puts $otp
