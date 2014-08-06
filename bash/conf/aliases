@@ -4,6 +4,9 @@ alias sl='ls';
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
+alias fls='ls --color=never'
+alias cdls='cd $(fls | selecta)'
+alias goto='cd $(find ~  -type d -maxdepth 5 | selecta)'
 
 # make grep colorful
 alias cgrep='grep --color=auto -i'
@@ -28,7 +31,7 @@ alias br='cd /Users/fesperan/gid-git-svn/brazil-build'
 alias ww='cd ~/workspaces/$(ls -1 --color=never ~/workspaces | selecta)'
 alias easyretro='bundle exec rake start'
 alias rsync='/usr/bin/rsync --progress'
-alias rr='source ~/.bashrc'
+alias rr='source ~/.bash_profile'
 alias deploy='git push heroku master'
 alias stage='git push test master'
 
@@ -95,3 +98,5 @@ alias bwer=brew
 alias brwe=brew
 
 alias asource="cd $ANDROID_HOME"
+
+#alias java_home=/usr/libexec/java_home

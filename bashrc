@@ -1,6 +1,6 @@
 export ANDROID_SDK_ROOT=/opt/boxen/homebrew/Cellar/android-sdk/22.0.5
 
-source /opt/boxen/env.sh
+#source /opt/boxen/env.sh
 
 source "$HOME/.dots/bash/conf/path"
 

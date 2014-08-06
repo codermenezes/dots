@@ -2,4 +2,4 @@
 #eval "$(rbenv init -)"
 
 eval "$(rbenv init --no-rehash -)"  > /dev/null 2>&1  
-rbenv rehash > /dev/null 2>&1 &!
+rbenv rehash > /dev/null 2>&1 &

@@ -25,12 +25,7 @@ export PATH="vendor/bundle/binstubs:$PATH"
 # add node modules
 export PATH="./node_modules/.bin:$PATH"
 
-export M2_HOME=/usr/share/maven
-export JAVA_HOME=/Library/Java/Home
-
-export POSTGRES_HOME=/opt/boxen/homebrew/opt/postgresql/
-
-export PATH=$POSTGRES_HOME/bin:$PATH
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_65.jdk/Contents/Home/
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
