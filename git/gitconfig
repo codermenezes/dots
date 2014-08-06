@@ -20,9 +20,7 @@
   new = green 
 
 [color "status"]
-  added = green
   changed = yellow
-  untracked = blue
 
 [core]
   excludesfile = ~/.gitignore
@@ -35,6 +33,7 @@
 [alias]
   a = add
   aa = add --all
+  dc = diff --cached
   alias = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\\t=> \\2/' | sort
   l = log
   lg = log --graph --pretty=format:'%C(yellow)%h %Cblue%aN %Cgreen%ar %Creset%s'
@@ -47,15 +46,16 @@
   st = status
   ss = status -s
   co = checkout
+  ci = commit
   cf = "!git ss | grep '[UD][UD]' --color"
   ccf = "!git cf | wc -l"
   br = branch
   px = push
   pl = pull
+  pr = pull --rebase
   r = remote
   unstage = reset HEAD --
   this = !git init && git add . && git commit -m \"Initial commit.\"
-  t = !git this
   amend = !git log -n 1 --pretty=tformat:%s%n%n%b | git commit -F - --amend
   x  = commit -m
   xa = commit -a -m
