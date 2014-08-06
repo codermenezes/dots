@@ -29,7 +29,7 @@ export ZZPATH="$HOME/.dots/bash/funcoeszz"  # script
 source "$ZZPATH"				
 
 # set the default editor
-export EDITOR=vim
+export EDITOR="mvim -v"
 
 # set the term to have 256 colors
 export TERM=xterm-256color
@@ -37,3 +37,6 @@ export TERM=xterm-256color
 export PATH=~/bin:$PATH
 
 
+
+#THIS MUST BE AT THE END OF THE FILE FOR GVM TO WORK!!!
+[[ -s "/Users/fesperan/.gvm/bin/gvm-init.sh" ]] && source "/Users/fesperan/.gvm/bin/gvm-init.sh"
