@@ -64,3 +64,6 @@
   account = personal
 [push]
   default = simple
+[user]
+	email = filipesperandio@gmail.com
+	name = Filipe Esperandio

@@ -1,9 +1,9 @@
 # vim: ft=sh
 export WORKDIR=/Users/fesperan/amplify
 
-export M2_HOME=/usr/share/maven
+#export M2_HOME=/usr/share/maven
 #export MAVEN_OPTS="-Dandroid.lint.skip=true"
-export ANDROID_HOME=$ANDROID_SDK_ROOT
+#export ANDROID_HOME=$ANDROID_SDK_ROOT
 export PATH=$ANDROID_HOME/tools:$PATH
 export PLAY_HOME=/usr/local/opt/play
 export PATH=$PLAY_HOME:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$JAVA_HOME/bin:$HOME/amplify/amptools/bin:$PATH
