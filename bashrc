@@ -1,4 +1,3 @@
-export ANDROID_SDK_ROOT=/opt/boxen/homebrew/Cellar/android-sdk/22.0.5
 
 #source /opt/boxen/env.sh
 
@@ -21,7 +20,12 @@ source "$HOME/.dots/bash/conf/bash_completion"
 source "$HOME/.dots/bash/conf/npm"
 source "$HOME/.dots/bash/conf/nvm"
 
+source "$HOME/.dots/bash/conf/java"
+
+
 source "$HOME/.dots/bash/conf/amplify"
+
+source "$HOME/.dots/bash/reachlocal/keystonerc"
 
 # Instalacao das Funcoes ZZ (www.funcoeszz.net)
 export ZZOFF=""  # desligue funcoes indesejadas
@@ -36,6 +40,8 @@ export TERM=xterm-256color
 
 export PATH=~/bin:$PATH
 
+export ANDROID_HOME=/usr/local/Cellar/android-sdk/23.0.2/
+export ANDROID_SDK_ROOT=$ANDROID_HOME
 
 
 #THIS MUST BE AT THE END OF THE FILE FOR GVM TO WORK!!!

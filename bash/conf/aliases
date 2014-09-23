@@ -6,7 +6,7 @@ alias la='ls -A'
 alias l='ls -CF'
 alias fls='ls --color=never'
 alias cdls='cd $(fls | selecta)'
-alias goto='cd $(find ~ -type d -maxdepth 5 | selecta)'
+alias goto='cd $(find ~ -type d -maxdepth 4 | selecta)'
 
 # make grep colorful
 alias cgrep='grep --color=auto -i'
@@ -91,6 +91,8 @@ alias mvn_quick_build='mvn clean install -Dmaven.test.skip=true -Dandroid.lint.s
 alias cd..="cd .." 
 alias gms="git multi status"
 alias groovedown="java -jar /Applications/GrooveDown.jar" 
+alias gr=gradle
+alias build=gradle
 
 alias disable_minimize_using_cmd_m="defaults write -g NSUserKeyEquivalents -dict-add 'Minimize' '\0'"
 alias add_boxen='(cd /opt/boxen/repo && vim)'
@@ -100,3 +102,5 @@ alias brwe=brew
 alias asource="cd $ANDROID_HOME"
 
 #alias java_home=/usr/libexec/java_home
+#
+alias tomcatlogs="tail -f /opt/tomcat/logs/*"

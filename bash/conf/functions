@@ -279,12 +279,12 @@ install_postgress() {
   "
 }
 
-android_scaffold() {
+new_android_project() {
   mvn archetype:generate \
     -DarchetypeArtifactId=android-quickstart \
     -DarchetypeGroupId=de.akquinet.android.archetypes \
     -DarchetypeVersion=1.0.10 \
-    -DgroupId=com.github.filipesperandio \
+    -DgroupId=io.github.filipesperandio \
     -DartifactId=$1;
 }
 
