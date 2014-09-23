@@ -41,7 +41,7 @@
   last = log -1 HEAD
   w = log --name-status #short whatchanged
   s = show
-  d = diff
+  d = diff --word-diff
   ds = diff --staged
   st = status
   ss = status -s
