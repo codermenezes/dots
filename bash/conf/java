@@ -1,0 +1,14 @@
+# vim: ft=sh
+export JAVA7=/Library/Java/JavaVirtualMachines/jdk1.7.0_65.jdk/Contents/Home/
+export JAVA8=/Library/Java/JavaVirtualMachines/jdk1.8.0_20.jdk/Contents/Home/
+export JAVA6=/system/library/java/javavirtualmachines/1.6.0.jdk/Contents/Home/
+export JAVA_HOME=$JAVA8
+export JAVA_OPTS="-Xmx1024m -Djruby.compile.mode=OFF -Djava.awt.headless=true"
+export JRUBY_OPTS="-Xcext.enabled=true"
+
+switch_to_java() {
+  java_version=JAVA${1}
+  export JAVA_HOME=${!java_version}
+  export PATH=${JAVA_HOME}/bin:${PATH}
+  javac -version
+}
