@@ -11,7 +11,8 @@ END_='\[\e[m\]' ;
 
 GIT_REPO='$(__git_ps1 "(%s) ")' ;
 git_not_pushed(){
-    not_pushed=$(git log --pretty="%h" origin/master..master 2>/dev/null | wc -l | xargs)
+    branch=$( __git_ps1 | sed -E 's/.{2}(.*).{1}/\1/' )
+    not_pushed=$(git log --pretty="%h" origin/${branch}..${branch} 2>/dev/null | wc -l | xargs)
     [[ "$not_pushed" != "0" ]] && echo "(${not_pushed} commits ahead)" || echo " "
 }
 

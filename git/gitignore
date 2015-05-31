@@ -6,3 +6,6 @@ tags
 !tags/
 *.sass-cache
 vendor/bundle
+.gems
+.rbenv-gemsets
+.gemset

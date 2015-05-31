@@ -1,5 +1,17 @@
 #!/bin/bash
 
+fuzzyfinder() {
+  local root=$1
+  local fuzzy=$(echo $2 | sed 's/./&*/g')
+  find ${root} -iname "*${fuzzy}" -type d -maxdepth 1
+}
+
+goto() {
+  local dir=${1:-"${HOME}"}
+  local depth=${2:-"4"}
+  cd $(find $dir -type d -maxdepth $depth | selecta)
+}
+
 myfind() {
   FFOUND_PWD=${PWD}
   FFOUND=($(myfff $1 $2))
@@ -20,55 +32,27 @@ print_found() {
 done
 }
 
-lf() { print_found; }
+ffp() { print_found; }
 
 fff() { myfff "f" "$1"; }
-
-ggfcode() {
-  if [ "$1" == "help" ]; then
-    echo "Usage: fcode <code> <file_pattern>"
-    echo "       fcode signedIn .java"
-    return;
-  fi
-  gg;
-  gg_grep_code $1 $2;
-}
-ggfclass() {
-  gg;
-  find_on_dir "ecom" $1;
-  find_on_dir "components" $1;
-}
-gg_grep_code() {
-  find_on_dir "ecom" $2 | xargs grep -in $1;
-  find_on_dir "components" $2 |xargs grep -in $1;
-}
-
-find_on_dir() {
-  find $1 -iname "*$2*" -type "f" | grep -v test | grep -v bin;
-}
-
-fcode() {
-  find_on_dir "." $2 | xargs grep -in $1;
-}
 
 ff() { myfind "f" "$1"; }
 
 fd() { myfind "d" "$1"; }
 
-fn() {
-  echo ${FFOUND};
-
+ffn() {
   [ ! -z ${FFOUND[$1-1]} ] && echo ${FFOUND_PWD}/${FFOUND[$1-1]};
 }
 
-vf() { vim $(fn "$1"); }
+ffv() { vim $(fn "$1"); }
 
-d() { cd $(dirname $(fn "$1")); }
+ffcd() { cd $(dirname $(fn "$1")); }
 
-c() { cat $(fn "$1"); }
+ffc() { cat $(fn "$1"); }
 
 edit() {
   (cd $HOME/.dots && vim bash/conf/$1)
+  rr
 }
 
 scaffold() {
@@ -362,7 +346,8 @@ cordova_deploy() {
 }
 
 droid_at_screen() {
-  java -jar ~/bin/droidAtScreen.jar
+  export JAVA_OPTS=
+  java -jar ~/.dots/bin/droidAtScreen.jar
 }
 
 
@@ -381,9 +366,45 @@ resize() {
   convert  -resize $size -background white -extent ${size}x${size} -gravity center $2 $3
 }
 
-new_ruby_project() {
+new-ruby-project() {
+  [[ "${1}" == "" ]] && echo "Usage: ${0} <project_name>" && return
   git clone --depth=1 git@github.com:DivineDominion/rspec-guard-spork-boilerplate.git $1
   cd $1
-  rm -rf .git
-  git init
+  rm -r .git
+}
+
+android_components() {
+  android list sdk --all --extended | grep "id:" | awk -F" or " '{print $2}' | sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/,/g' | sed 's/"//g' 
+}
+
+docker_time() {
+  boot2docker ssh sudo ntpclient -s -h pool.ntp.org
+}
+
+docker_connect() {
+  status=$(boot2docker status)
+  case "$status" in
+    poweroff)
+      boot2docker start && _docker_shellinit
+      ;;
+    running)
+      _docker_shellinit
+      ;;
+    *)
+      boot2docker restart && _docker_shellinit
+      ;;
+  esac
+
+}
+
+docker_clean() {
+  docker rm $(docker ps -a -q) && docker rmi $(docker images | grep "^<none>" | awk "{print $3}")
+}
+
+_docker_shellinit() {
+  source <(boot2docker shellinit 2>/dev/null | grep export)
+}
+
+gemset-init() {
+  echo '.gems' > .rbenv-gemsets
 }

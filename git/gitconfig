@@ -30,6 +30,9 @@
 [diff]
   ignoreSubmodules = dirty
 
+[apply]
+ whitespace = fix
+
 [alias]
   a = add
   aa = add --all
@@ -37,6 +40,8 @@
   alias = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\\t=> \\2/' | sort
   l = log
   lg = log --graph --pretty=format:'%C(yellow)%h %Cblue%aN %Cgreen%ar %Creset%s'
+  lg-nocolor = log --pretty=format:'%h %aN %ar %s' 
+  log-summary = log --pretty=format:'%s' 
   ls = log --stat
   last = log -1 HEAD
   w = log --name-status #short whatchanged
@@ -60,8 +65,12 @@
   x  = commit -m
   xa = commit -a -m
   ignore=!([ ! -e .gitignore ] && touch .gitignore) | echo $1 >>.gitignore
-[heroku]
-  account = personal
+  apl = "!findstash() { git stash apply `git stash list | grep $1 | cut -d':' -f1`; }; findstash"
+  unchange = "!git ls-files -v|grep '^h'"
+  assume-unchange = update-index --assume-unchanged
+  no-assume-unchange = update-index --no-assume-unchanged
+  boom = clean -xfd
+  fo = fetch origin
 [push]
   default = simple
 [user]

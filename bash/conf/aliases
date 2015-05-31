@@ -6,7 +6,6 @@ alias la='ls -A'
 alias l='ls -CF'
 alias fls='ls --color=never'
 alias cdls='cd $(fls | selecta)'
-alias goto='cd $(find ~ -type d -maxdepth 4 | selecta)'
 
 # make grep colorful
 alias cgrep='grep --color=auto -i'
@@ -20,28 +19,14 @@ alias here="localhost"
 alias mv="mv -v"
 alias cp="gcp -v"
 alias vi="vim"
-#case `uname -s` in
-# 'Linux') if type -p gvim &>/dev/null; then alias vim="gvim"; fi ;;
-# 'Darwin') if type -p mvim &>/dev/null; then alias vim="mvim"; fi ;;
-#esac
 alias v="vim"
 alias vim="mvim -v"
 alias g="git"
-alias br='cd /Users/fesperan/gid-git-svn/brazil-build'
-alias ww='cd ~/workspaces/$(ls -1 --color=never ~/workspaces | selecta)'
-alias easyretro='bundle exec rake start'
-alias rsync='/usr/bin/rsync --progress'
 alias rr='source ~/.bash_profile'
 alias deploy='git push heroku master'
-alias stage='git push test master'
+alias ww='goto ~/workspaces 2'
 
 alias install_vim='brew install https://raw.github.com/adamv/homebrew-alt/master/duplicates/vim.rb'
-
-alias vv='/Users/filipesperandio/workspaces/vraptor-scaffold/bin/vraptor'
-alias scaf="rm -rf scaf_bootstrap/; vraptor new scaf_bootstrap --heroku --bootstrap; cd scaf_bootstrap/; vraptor scaffold User name:string desc:text; pkg-run;"
-alias screencasts='cd ~/Movies/casts'
-alias ltree='tree | less'
-alias y=yeoman
 
 #add autocomplete for g alias
 complete -o bashdefault -o default -o nospace -F _git g
@@ -60,23 +45,11 @@ alias rk="rake"
 alias rkt="RAILS_ENV=test rake"
 alias rks="rake spec"
 
-#rake db:migrate and db:seed alias
-alias m="rake db:migrate"
-alias mt="RAILS_ENV=test rake db:migrate"
-alias s="rake db:seed"
-
-# alias to projects folder
-alias gp="cd ~/prj"
-
 # alias to current projects folder
 alias gc="cd ~/prj/current"
 alias start_mongo="mongod run --config /usr/local/Cellar/mongodb/2.0.0-x86_64/mongod.conf &";
 alias habits='history 500 | sed s/^[[:space:]]*[0-9]*[[:space:]]*// | sort | uniq -c | sort -n -r | head -n 20'
-alias rdp="rdesktop -r clipboard:CLIPBOARD -a 24 -g 1280x700  -z "
-alias mount_macroq='mkdir /Volumes/macroq; mount -t smbfs "//fesperandio@sfvd-macroq-01.gid.gap.com/c$" /Volumes/macroq/'
-alias ecom_workspace='/Users/fesperan/gid-git-svn/svn/eclipse/eclipse-jee-indigo-SR2-macosx-cocoa-x86_64/eclipse/eclipse -data /Users/fesperan/gid-git-svn/svn/ecom-ui-db/'
 
-alias gidcust='sqlplus.sh GIDCUST/GIDCUST@10.27.15.65:1521/GIDSOLD1'
 alias cdvim='cd ~/.vim'
 alias edvim='cdvim; vim'
 alias dots='cd ~/.dots'
@@ -85,22 +58,26 @@ alias edots='dots; vim'
 alias be='bundle exec'
 alias iphone='open "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Applications/iPhone Simulator.app"'
 
-alias ar='ack --ruby'
 alias pretty_json='python -mjson.tool'
 alias mvn_quick_build='mvn clean install -Dmaven.test.skip=true -Dandroid.lint.skip=true -Dpmd.skip=true -Dversion.code=300000 -Psign'
 alias cd..="cd .." 
-alias gms="git multi status"
 alias groovedown="java -jar /Applications/GrooveDown.jar" 
-alias gr=gradle
+alias gr='./gradlew'
 alias build=gradle
 
 alias disable_minimize_using_cmd_m="defaults write -g NSUserKeyEquivalents -dict-add 'Minimize' '\0'"
-alias add_boxen='(cd /opt/boxen/repo && vim)'
 alias bwer=brew
 alias brwe=brew
 
 alias asource="cd $ANDROID_HOME"
 
-#alias java_home=/usr/libexec/java_home
-#
-alias tomcatlogs="tail -f /opt/tomcat/logs/*"
+alias copy="tr -d '\n' | pbcopy"
+alias shot='screenshot2 -d ~/Desktop/screenshot.png'
+alias md-server='harp server'
+
+alias docker-clean='docker rm $(docker ps -a -q) && docker rmi $(docker images | grep "^<none>" | awk "{print $3}")'
+alias record_screen='open ~/Applications/LICEcap.app'
+alias update='sudo softwareupdate -i -a; brew update; brew upgrade; brew cleanup; npm install npm -g; npm update -g; sudo gem update --system; sudo gem update'
+alias heroku=/usr/local/bin/heroku
+
+alias kill_periferals='sudo killall VDCAssistant'

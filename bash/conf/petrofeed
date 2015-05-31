@@ -1,0 +1,100 @@
+#!/usr/bin/env bash
+
+export MAC_MINI_IP=172.16.186.10
+export CODECLIMATE_DISABLED=true
+export PROFILE_DISABLED=true
+
+alias pclear="echo prod && adb shell pm clear com.petrofeed.android; echo debug && adb shell pm clear com.petrofeed.android.debug"
+alias puninstall="echo prod && adb uninstall com.petrofeed.android; echo debug && adb uninstall com.petrofeed.android.debug"
+alias papk='find ${HOME}/petrofeed/PetroFeedApp-Android/ -name "*debug-1*.apk"'
+alias galaxy='player --vm-name Galaxy &>/dev/null &'
+alias vpn="echo -n G9FanonTCYZcbkh8YgQ7 | pbcopy; echo 'Vpn password copied to clipboard'"
+alias dropbox="cd '/Users/filipesperandio/Dropbox (PetroFeed)/PetroFeed - Dev/'"
+alias api="cd ~/petrofeed/platform-apis/"
+
+con-heroku() {
+  heroku $@ --app preprod-connect-server --account petrofeed
+}
+
+pet() {
+  cd $(fuzzyfinder ~/petrofeed ${1})
+}
+
+db() {
+  local database=${1:-"api_development"}
+
+  case "$database" in
+    doc-prod)
+      heroku pg:psql --app acquisition-petrofeed --account petrofeed
+      ;;
+    doc-preprod)
+      heroku pg:psql --app acquisition-petrofeed-preprod --account petrofeed
+      ;;
+    api-prod)
+      heroku pg:psql --app petrofeed-api --account petrofeed
+      ;;
+    api-preprod)
+      heroku pg:psql --app preprod-api-petrofeed --account petrofeed
+      ;;
+    *)
+      psql -U petrofeed $database
+      ;;
+  esac
+}
+
+pstart() {
+  adb shell am start com.petrofeed.android.debug/com.petrofeed.android.${1}
+}
+
+mac-mini-ssh() {
+  echo Pedro9500 | copy
+  ssh pedro@${MAC_MINI_IP}
+}
+mac-mini() {
+  echo Pedro9500 | copy
+  open "vnc://pedro@${MAC_MINI_IP}"
+}
+
+pinstall() {
+  file=$(find_apk | grep 'debug')
+  adb install -r -d $file
+}
+
+ppinstall() {
+  file=$(select_apk)
+  on-device install -r -d $file
+}
+
+select_apk() {
+  find_apk | selecta
+}
+
+find_apk() {
+  find . -name '*apk' | grep -v 'unaligned'
+}
+
+grep_device() {
+  adb devices | selecta | awk '{print $1}'
+}
+
+on-device() {
+  adb -s $(grep_device) $*
+}
+
+plog() {
+  on-device logcat -vthreadtime *:S ActivityManager:W SystemErr:W AndroidRuntime:E PetroFeed:V
+}
+
+pf-connect() {
+  case ${1} in
+    login)
+      http post https://preprod-connect.herokuapp.com/login email='jesseekowalski@gmail.com' password=password
+      ;;
+    get_assets)
+      http get https://preprod-connect.herokuapp.com/assets Authorization:"Bearer $(pf-connect token)"
+      ;;
+    token)
+      pf-connect login | json token
+      ;;
+  esac
+}
