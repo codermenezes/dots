@@ -6,6 +6,8 @@ alias la='ls -A'
 alias l='ls -CF'
 alias fls='ls --color=never'
 alias cdls='cd $(fls | selecta)'
+alias gotoh='cd $(find ~ -type d -maxdepth 4 | selecta)'
+alias goto='cd $(find . -type d -maxdepth 4 | selecta)'
 
 # make grep colorful
 alias cgrep='grep --color=auto -i'
