@@ -12,8 +12,12 @@ alias vpn="echo -n G9FanonTCYZcbkh8YgQ7 | pbcopy; echo 'Vpn password copied to c
 alias dropbox="cd '/Users/filipesperandio/Dropbox (PetroFeed)/PetroFeed - Dev/'"
 alias api="cd ~/petrofeed/platform-apis/"
 
+pheroku() {
+  heroku $@ --account petrofeed
+}
+
 con-heroku() {
-  heroku $@ --app preprod-connect-server --account petrofeed
+  pheroku $@ --app preprod-connect-server
 }
 
 pet() {
