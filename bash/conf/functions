@@ -13,142 +13,20 @@ goto() {
 }
 
 myfind() {
-  FFOUND_PWD=${PWD}
-  FFOUND=($(myfff $1 $2))
-  print_found
-}
-
-myfff() {
   find . -iname "*$2*" -type "$1"
 }
-
-print_found() {
-  if [ "${#FFOUND[*]}" -eq 0 ]; then return; fi
-  local index=1
-  echo ${FFOUND[*]} | tr -s ' ' '\n' | while read line; do
-  if [ -t 1 ]; then printf "% 4d " $index; fi
-  echo $line
-  index=$((index + 1))
-done
-}
-
-ffp() { print_found; }
-
-fff() { myfff "f" "$1"; }
 
 ff() { myfind "f" "$1"; }
 
 fd() { myfind "d" "$1"; }
 
-ffn() {
-  [ ! -z ${FFOUND[$1-1]} ] && echo ${FFOUND_PWD}/${FFOUND[$1-1]};
-}
-
-ffv() { vim $(fn "$1"); }
-
-ffcd() { cd $(dirname $(fn "$1")); }
-
-ffc() { cat $(fn "$1"); }
-
 edit() {
   (cd $HOME/.dots && vim bash/conf/$1)
-  rr
-}
-
-scaffold() {
-  vraptor scaffold $*;
-  prj=`findproject`;
-  echo "[$prj] vraptor scaffold $*" >> ~/vraptor-scaffold.log;
-}
-
-findproject() {
-  echo ${PWD} | awk -F'/' '{ print $(NF) }';
-}
-
-awkk() {
-  awk -F"$1" "{ print \$$2 }";
-}
-pkg-run() {
-mvn clean;
-mvn package;
-echo "\n\nBUILD IS DONE ===> STARTING SERVER...\n\n";
-sh target/bin/webapp;
-}
-
-mvn_create() {
-  mvn archetype:generate -DgroupId=$1 -DartifactId=$1 -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false;
 }
 
 ps() {
   /bin/ps -$1;
 }
-
-eclipseupdate(){
-  mvn eclipse:eclipse;
-}
-
-fixsubtitles() {
-  for i in $(ls -1 *.avi) 
-  do 
-    name=`echo $i | cut -d'.' -f1,2,3,4`;
-    oldfile=`find . -iname "$name*.srt"`; 
-    newfile=`echo $i | awk -F'.avi' '{ print $1 }'`; 
-    mv $oldfile $newfile.srt;
-  done
-}
-
-awkp() {
-  param1=$1;
-  awkparam="{ print \$$param1 }";
-  awk "$awkparam";
-}
-
-resolve_ecom() {
-  echo "Fixing perl..."
-  gg;
-  cd build/buildeng;
-  sed 's/<env key="VERSIONER_PERL_VERSION" value="5.8.9"\/>//' <dependency.xml > dependency-tmp.xml; 
-  mv dependency-tmp.xml dependency.xml;
-  br;
-  echo "rake profile";
-  echo; echo; echo; echo;
-  rake profile;
-  
-  echo "rake components";
-  echo; echo; echo; echo;
-  rake components;
-
-  echo "rake ecom";
-  echo; echo; echo; echo;
-  rake ecom;
-
-  echo "Checking out original dependency.xml back"
-  gg;
-  cd build/buildeng;
-  git checkout dependency.xml;
-}
-
-setup_eclipse_tomcat() {
-  cd $HOME/tmp/workspaces/build/buildeng;
-  ./ant -Dalias=ecom -Dno.svn.access=true clean-tomcat-eclipse tomcat-eclipse
-}
-
-upi() {
-  echo $1 >> ~/setup.bkp/install.sh;
-}
-
-poadb() {
-  sqlplus $1/$1@10.27.15.4:1521/GIDSOLD1;
-}
-
-cw() {
-  if [ "$1" != "" ]; then
-    cd $1;
-    export CW_WORK_DIR=`pwd`;
-  else                   
-    cd $CW_WORK_DIR;
-  fi
-}  
 
 mvnpublish() {
   mvn clean deploy; 
@@ -169,164 +47,15 @@ mvnpublish() {
   echo
 }
 
-changed_files() {
-  git log --grep="$1" --name-only --pretty="%n" | sort -u
-}
-
-getuser() {
-  http GET http://serverstatus.gid.gap.com/getuser.php?accountname=$1 | grep "Name\|Email" | \
-    awk -F "<br>" '{sub(/</,""); print $2,$3}' | \
-    awk -F "<font color=blue>" '{print $1 $2}'
-}
-
-deploy_status() {
-  git lg origin/master ^heroku/master;
-}
-
 convert_to_utf() {
   iconv -f iso-8859-15 -t utf-8 $1 > $2;
 }
 
-add_line_to_all_files() {
-  if [ "$1" == "" ]
-  then
-    echo "Usage: add_lines_to_all_files <pattern_to_find> <line_to_add_after_pattern> <file_name_pattern_to_search> <pattern_to_exclude>";
-    return;
-  fi
-  
-  for i in $(find . -iname "*$3*" -type "f" | grep -v $4)
-  do
-    add_line_after "$1" "$2" "$i" > /tmp/addLineAfter
-    mv /tmp/addLineAfter $i;
-  done
-}
-
-add_line_after() {
-  /usr/bin/awk -v pattern="$1" -v new_line="$2" '{ print $0; if ( $0 ~ pattern ) { print new_line; } }' < $3
-}
-
-function hex { echo "obase=16; $1" | bc; }
-
-send_commits() {
-  if [ "$#" -ne "2" ]; then echo "Usage: send_commits number-of-commits /path/to/mounted/workspace/project" >&2; return 1; fi
-
-  echo Starting...
-  git log --name-status -n "$1" | grep '^[ADM][[:space:]]\+.*/.*' | sort -k2 | uniq -f1 | while read status line;
-do
-  from="$line";
-  #to="${2}/${line#*/}";
-  to="${2}/${line}";
-  case "$status" in
-    A|M)
-      echo "Copying from:"; echo "    ${from}"; echo "to"; echo "    ${to}";
-      mkdir -p "$(dirname "${to}")"
-      /bin/cp -f "${from}" "${to}"
-      ;;
-    D)
-      echo "Deleting file: $to"
-      /bin/rm -f "$to"
-      ;;
-  esac
-  echo "---- ---- ---- ---- ----"
-done
-  }
-
-  send_modified_files () { 
-    if [ "$#" -ne "1" ]; then
-      echo "Usage: send_modified_files /path/on/vm/to/workspace/project" 1>&2;
-      return 1;
-    fi;
-    git ls-files --modified | while read line;
-  do
-    from="$line";
-    to="${1}/${line#*/}";
-    echo /bin/cp -f "'${from}'" "'${to}'";
-    mkdir -p "$(dirname "${to}")";
-    /bin/cp -f "${from}" "${to}";
-  done
-}
-
-
-install_postgress() {
-  echo "
-  brew install postgresql
-  initdb /usr/local/var/postgres
-  mkdir -p ~/Library/LaunchAgents
-  cp /usr/local/Cellar/postgresql/9.0.4/org.postgresql.postgres.plist ~/Library/LaunchAgents/
-  launchctl load -w ~/Library/LaunchAgents/org.postgresql.postgres.plist
-  createdb DATABASE
-  psql postgres -c 'CREATE EXTENSION \"adminpack\";'
-  psql postgres -c 'CREATE USER root WITH PASSWORD \"root\";'
-  psql postgres -c 'CREATE database dogstyle_development'
-  psql postgres -c \"GRANT ALL PRIVILEGES to root;\"
-  psql postgres -c \"GRANT ALL PRIVILEGES ON DATABASE dogbis_development to root;\"
-  "
-}
-
-new_android_project() {
-  mvn archetype:generate \
-    -DarchetypeArtifactId=android-quickstart \
-    -DarchetypeGroupId=de.akquinet.android.archetypes \
-    -DarchetypeVersion=1.0.10 \
-    -DgroupId=io.github.filipesperandio \
-    -DartifactId=$1;
-}
-
-mygrep() {
-  grep -rni $* . --exclude-dir log --exclude-dir tmp --exclude-dir coverage
-}
-
-mvn_new() {
-  mvn archetype:generate \
-    -DarchetypeGroupId=org.apache.maven.archetypes \
-    -DgroupId=com.mycompany.app \
-    -DartifactId=my-app
-}
-
-checkbuild() {
-  case ${1} in
-    on )
-      defaults write com.tomato.Checkman stickies.disabled -bool NO
-      ;;
-    off )
-      defaults write com.tomato.Checkman stickies.disabled -bool YES
-      ;;
-    esac 
-}
-
-migrate_all() {
-  for i in development test
-  do
-    echo ${i}
-    RAILS_ENV=${i} rake db:migrate
-  done
-}
-
-testflight() {
- curl http://testflightapp.com/api/builds.json \
-    -F file=@${1} \
-    -F api_token='e0e9f3faa676bb3077ed7f3b3cdef6e9_MTE5NTE1ODIwMTMtMDctMjUgMTM6MjY6MTAuMzkxOTc3' \
-    -F team_token='c369a780008f36d39f96a0aa1bfb52d3_MjUyMzYwMjAxMy0wNy0yNSAxMzo1NjoyMy42Njg5Mjg' \
-    -F notes='This build was uploaded via the upload API' \
-    -F notify=True \
-    -F distribution_lists='Internal, QA';
-}
 
 prj() {
   [[ ! ${1} ]] && cd $(cat ~/.current_project) && return;
   cd ${1};
   echo $(pwd) >  ~/.current_project;
-}
-
-parse_json() {
-  attrs=""
-  for i in $*;
-  do
-    local regex='^[0-9]+$'
-    local param=$([[ ${i} =~ ${regex} ]] && echo  ${i} || echo "'${i}'" )
-    attrs=$attrs"[${param}]"
-  done
-  ruby -e "require 'json'; parsed = JSON.parse(STDIN.read)$attrs; puts parsed.to_json"; 
 }
 
 cordova_deploy() {
@@ -350,13 +79,8 @@ droid_at_screen() {
   java -jar ~/.dots/bin/droidAtScreen.jar
 }
 
-
 concentrate() {
   (cd /Volumes/HD/bkp_macpipo/Music/ && herrie -p Dream\ Theater/ dream_theater/ Foo\ Fighters/ Eric\ Clapton/)
-}
-
-delete_empty_lines() {
- sed '/^[ ]*$/d' 
 }
 
 log() { echo $@ 1>&2; }
@@ -407,4 +131,29 @@ _docker_shellinit() {
 
 gemset-init() {
   echo '.gems' > .rbenv-gemsets
+}
+
+export_spectacle() {
+  for key in MakeLarger \
+    MakeSmaller \
+    MoveToBottomHalf \
+    MoveToCenter \
+    MoveToFullscreen \
+    MoveToLeftHalf \
+    MoveToLowerLeft \
+    MoveToLowerRight \
+    MoveToNextDisplay \
+    MoveToNextThird \
+    MoveToPreviousDisplay \
+    MoveToPreviousThird \
+    MoveToRightHalf \
+    MoveToTopHalf \
+    MoveToUpperLeft \
+    MoveToUpperRight \
+    RedoLastMove \
+    UndoLastMove; \
+  do
+    value=$(defaults read com.divisiblebyzero.Spectacle ${key} | sed 's/[^0-9a-f]//g')
+    echo "defaults write com.divisiblebyzero.Spectacle ${key} -data ${value}"
+  done
 }
