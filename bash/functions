@@ -1,5 +1,10 @@
 #!/bin/bash
 
+log () {
+  local fmt="» $1\n"; shift;
+  tput setaf 2; printf "\n$fmt" "$@"; tput sgr0;
+}
+
 fuzzyfinder() {
   local root=$1
   local fuzzy=$(echo $2 | sed 's/./&*/g')
