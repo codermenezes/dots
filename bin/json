@@ -8,6 +8,9 @@
  * See <https://github.com/trentm/json> and <https://trentm.com/json/>
  */
 
+if(process.argv[2] == 'browse') 
+  require('child_process').exec('open https://github.com/trentm/json') && process.exit(1);
+
 var VERSION = '9.0.2';
 
 var p = console.warn;

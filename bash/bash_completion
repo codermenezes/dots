@@ -1,3 +1,5 @@
+# vim: ft=sh
+
 # set the bash-completion path
 # needs bash-completion installed
 

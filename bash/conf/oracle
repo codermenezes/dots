@@ -1,4 +1,0 @@
-PATH="/usr/local/oracle/ohome/bin:$PATH"
-PATH="/usr/local/oracle/bin:$PATH"
-
-export PATH

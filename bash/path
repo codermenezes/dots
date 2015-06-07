@@ -1,0 +1,25 @@
+# vim: ft=sh
+
+# set the PATH environment variable
+PATH=$PATH
+PATH="$HOME/.dots/bin:$PATH"
+PATH="$HOME/bin:$PATH"
+PATH="$HOME/Dropbox/bin:$PATH"
+
+PATH="$HOME/node_modules/.bin:$PATH"
+PATH="./node_modules/.bin:$PATH"
+
+PATH="/usr/bin:$PATH"
+PATH="/usr/sbin:$PATH"
+PATH="/bin:$PATH"
+PATH="/sbin:$PATH"
+
+PATH="/usr/local/sbin:$PATH"
+PATH="/usr/local/bin:$PATH"
+
+PATH="$(brew --prefix coreutils)/libexec/gnubin):$PATH"
+
+# Programs
+PATH="$PATH:/opt/homebrew-cask/Caskroom/genymotion/2.2.2/Genymotion.app/Contents/MacOS/"
+PATH="$PATH:$HOME/Applications/Firefox.app/Contents/MacOS/"
+

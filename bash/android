@@ -1,0 +1,46 @@
+# vim: ft=sh
+
+export ANDROID_HOME=/usr/local/Cellar/android-sdk/24.1.2
+
+PATH="$ANDROID_HOME/bin:$ANDROID_HOME/tools/:$ANDROID_HOME/platform-tools:$PATH" 
+
+alias android_reboot='adb shell am broadcast -a android.intent.action.BOOT_COMPLETED '
+alias galaxy='player --vm-name Galaxy &>/dev/null &'
+
+resign() {
+  rm -rf unpacked
+  rm app-debug.apk
+  mkdir unpacked
+  unzip $1 -d unpacked/
+  cd unpacked
+  rm -rf META-INF/
+  zip -r ../app-debug.apk *
+  jarsigner -verbose -keystore $CB_STORE_LOCATION -sigalg SHA1withRSA -digestalg SHA1 -storepass $CB_STORE_PASS -keypass $CB_KEY_PASS app-debug.apk $CB_KEY_ALIAS
+  cd ..
+}
+
+android_components() {
+  android list sdk --all --extended | grep "id:" | awk -F" or " '{print $2}' | sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/,/g' | sed 's/"//g' 
+}
+
+
+droid_at_screen() {
+  export JAVA_OPTS=
+  java -jar ~/.dots/bin/droidAtScreen.jar
+}
+
+select_apk() {
+  find_apk | selecta
+}
+
+find_apk() {
+  find . -name '*apk' | grep -v 'unaligned'
+}
+
+grep_device() {
+  adb devices | selecta | awk '{print $1}'
+}
+
+on-device() {
+  adb -s $(grep_device) $*
+}

@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+docker_time() {
+  boot2docker ssh sudo ntpclient -s -h pool.ntp.org
+}
+
+docker_connect() {
+  status=$(boot2docker status)
+  case "$status" in
+    poweroff)
+      echo 'starting...'
+      boot2docker start && _docker_shellinit
+      ;;
+    running)
+      _docker_shellinit
+      ;;
+    *)
+      boot2docker restart && _docker_shellinit
+      ;;
+  esac
+
+}
+
+docker_clean() {
+  docker rm $(docker ps -a -q) 
+  docker rmi $(docker images | grep "^<none>" | awk "{print $3}")
+}
+
+_docker_shellinit() {
+  source <(boot2docker shellinit 2>/dev/null | grep export)
+}
+
+export DOCKER_TLS_VERIFY=1
+_docker_shellinit

@@ -1,0 +1,47 @@
+# vim: ft=sh
+
+# Colors
+__GREY__='\[\e[0;30m\]'
+__BLUE__='\[\e[0;34m\]'
+__WHITE__='\[\e[0;37m\]'
+__GREEN__='\[\e[;32m\]'
+__RED__='\[\e[;31m\]'
+
+# Special markers
+SEPARATOR_='\[\e[;31m\]'
+SYMBOL='$'
+END_='\[\e[m\]'
+
+# Git
+_GIT_REPO='$(__git_ps1 "(%s) ")'
+_GIT="$__RED__$_GIT_REPO $__GREY__\$(git_not_pushed)"
+
+# Partials
+_TIME="$__GREY__\t"
+_USER="$__BLUE__ \u@"
+_HOST="$__WHITE__\h:"
+_PATH="$__GREEN__\w"
+_NEW_LINE="\n"
+_PROMPT="$__RED__$SYMBOL $END_"
+
+# With user@host
+# export PS1="$_TIME$_USER$_HOST $_PATH $_GIT $_NEW_LINE$_PROMPT"
+
+# Without user
+export PS1="$_TIME $_PATH $_GIT $_NEW_LINE$_PROMPT"
+
+
+###############################################
+#### HELP  ####################################
+###############################################
+#
+# \!  ## History number of current command
+# \#  ## Command number of current command
+# \d  ## Current date
+# \h  ## Host name
+# \n  ## Newline
+# \s  ## Shell name
+# \t  ## Current time
+# \u  ## User name
+# \W  ## Current working directory
+# \w  ## Current working directory (full path)

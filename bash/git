@@ -1,0 +1,23 @@
+# vim: ft=sh
+
+git_not_pushed(){
+    branch=$( __git_ps1 | sed -E 's/.{2}(.*).{1}/\1/' )
+    not_pushed=$(git log --pretty="%h" origin/${branch}..${branch} 2>/dev/null | wc -l | xargs)
+    [[ "$not_pushed" != "0" ]] && echo "(${not_pushed} commits ahead)" || echo " "
+}
+
+fix_repo() {
+  repo=${1:-"bitbucket_tw"}
+  new_repo_line=$(git remote -v | grep origin | head -n1 | sed "s/bitbucket.org/${repo}/" | cut -d" " -f1)
+  git remote rm origin
+  git remote add $new_repo_line
+  git fetch origin 
+  git branch --set-upstream-to=origin/master master
+  git remote -v
+}
+
+__git_ps1() {
+    echo '';
+}
+
+eval "$(hub alias -s)"

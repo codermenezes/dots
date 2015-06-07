@@ -55,7 +55,6 @@ alias copy="tr -d '\n' | pbcopy"
 alias shot='screenshot2 -d ~/Desktop/screenshot.png'
 alias md-server='harp server'
 
-alias docker-clean='docker rm $(docker ps -a -q) && docker rmi $(docker images | grep "^<none>" | awk "{print $3}")'
 alias record_screen='open ~/Applications/LICEcap.app'
 
 alias update='sudo softwareupdate -i -a; brew update; brew upgrade; brew cleanup; npm install npm -g; npm update -g; sudo gem update --system; sudo gem update'

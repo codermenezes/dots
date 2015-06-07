@@ -1,0 +1,54 @@
+# vim: ft=sh
+
+ci() {
+  RETURN_CODE=0
+  ci_recursion $@
+}
+ci_recursion() {
+  __GREEN__="\033[32m" 
+  __RED__="\033[31m" 
+  __WHITE__="\033[37m" 
+  __YELLOW__="\033[33m" 
+  COLOR=$__WHITE__
+
+  USER=fesperandio
+  API_TOKEN='65f8255daefebd57e433ee147ee7d68c'
+
+  ACCESS_KEY="${USER}%40amplify.com:${API_TOKEN}"
+
+  JENKINS="https://${ACCESS_KEY}@jenkins.ampaxs.com:8443"
+
+  JOB=${1}
+  DOWN_STREAM="${JENKINS}/job/${JOB}/api/json?tree=downstreamProjects[name]"
+  DOWN_STREAM_NAMES=$(curl -g -s -m 3 $DOWN_STREAM | perl -pe 's/.*?{"name":"(.*?)"},?(?:\]\})?/\1 /g' | grep -v '{"downstreamProjects":\[\]}' )
+  #if [[ "$DOWN_STREAM_NAMES" != "" ]]; then
+  #  echo -e "${__WHITE__}Downstream projects for ${JOB}: ${DOWN_STREAM_NAMES}" 
+  #fi
+
+  for downStreamProject in ${DOWN_STREAM_NAMES}
+  do
+    ci_recursion $downStreamProject 
+  done
+
+  JOB=${1}
+  JOB_URL="${JENKINS}/job/${JOB}/lastCompletedBuild/api/json?tree=result"
+  RESULT=$(curl -s -m 3 $JOB_URL | sed -n 's/.*"result":"\([A-Z]*\).*/\1/p')
+  
+  case "$RESULT" in
+    SUCCESS ) COLOR=$__GREEN__ ;;
+    UNSTABLE ) COLOR=$__YELLOW__ ;;
+    * ) COLOR=$__RED__ ;;
+  esac
+
+  echo -e "${COLOR}${JOB} : ${RESULT} ${__WHITE__}"
+  echo $RESULT | grep SUCCESS > /dev/null
+  RETURN_CODE=$(($RETURN_CODE + $?))
+
+  if [[ "$FORCE" == "true" ]]; then
+    RETURN_CODE=0
+  fi
+
+  return $RETURN_CODE
+
+}
+

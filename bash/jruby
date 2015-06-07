@@ -1,0 +1,5 @@
+# vim: ft=sh
+
+export JRUBY_OPTS="-Xcext.enabled=true"
+
+

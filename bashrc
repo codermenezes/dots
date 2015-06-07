@@ -1,51 +1,44 @@
-#source /opt/boxen/env.sh
+# vim: ft=sh
 
-source "$HOME/.dots/bash/conf/android"
+source "$HOME/.dots/bash/android"
 
-source "$HOME/.dots/bash/conf/path"
+source "$HOME/.dots/bash/path"
 
-source "$HOME/.dots/bash/conf/rbenv"
+source "$HOME/.dots/bash/aliases"
 
-source "$HOME/.dots/bash/conf/aliases"
+source "$HOME/.dots/bash/functions"
 
-source "$HOME/.dots/bash/conf/functions"
+source "$HOME/.dots/bash/colors"
 
-source "$HOME/.dots/bash/conf/colors"
+source "$HOME/.dots/bash/git"
 
-source "$HOME/.dots/bash/conf/bashline"
+source "$HOME/.dots/bash/bashline"
 
-source "$HOME/.dots/bash/conf/git"
+source "$HOME/.dots/bash/bash_completion"
 
-source "$HOME/.dots/bash/conf/bash_completion"
+source "$HOME/.dots/bash/rbenv"
 
-source "$HOME/.dots/bash/conf/npm"
+source "$HOME/.dots/bash/npm"
 
-source "$HOME/.dots/bash/conf/nvm"
+source "$HOME/.dots/bash/nvm"
 
-source "$HOME/.dots/bash/conf/java"
+source "$HOME/.dots/bash/java"
 
-source "$HOME/.dots/bash/conf/amplify"
+source "$HOME/.dots/bash/jruby"
 
-source "$HOME/.dots/bash/conf/petrofeed"
+source "$HOME/.dots/bash/jenkins.utils"
 
-source "$HOME/.dots/bash/conf/docker"
+source "$HOME/.dots/bash/docker"
 
-# source "$HOME/.dots/bash/conf/fix_apple_path_helper"
-
+source "$HOME/.dots/bash/work"
 
 # Instalacao das Funcoes ZZ (www.funcoeszz.net)
 # export ZZOFF=""  # desligue funcoes indesejadas
-# export ZZPATH="$HOME/.dots/bash/funcoeszz"  # script
-# source "$ZZPATH"				
+export ZZPATH="$HOME/.dots/bash/funcoeszz"  # script
+source "$ZZPATH"				
 
 # set the default editor
-export EDITOR="mvim -v"
+export EDITOR="vim"
 
 # set the term to have 256 colors
 export TERM=xterm-256color
-
-export PATH=~/bin:$PATH
-
-
-#THIS MUST BE AT THE END OF THE FILE FOR GVM TO WORK!!!
-[[ -s "/Users/fesperan/.gvm/bin/gvm-init.sh" ]] && source "/Users/fesperan/.gvm/bin/gvm-init.sh"

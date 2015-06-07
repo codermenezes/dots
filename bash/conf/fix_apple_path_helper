@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-fix_apple_path_helper() {
-  sudo chmod ugo-x /usr/libexec/path_helper 
-}

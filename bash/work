@@ -7,7 +7,6 @@ export PROFILE_DISABLED=true
 alias pclear="echo prod && adb shell pm clear com.petrofeed.android; echo debug && adb shell pm clear com.petrofeed.android.debug"
 alias puninstall="echo prod && adb uninstall com.petrofeed.android; echo debug && adb uninstall com.petrofeed.android.debug"
 alias papk='find ${HOME}/petrofeed/PetroFeedApp-Android/ -name "*debug-1*.apk"'
-alias galaxy='player --vm-name Galaxy &>/dev/null &'
 alias vpn="echo -n G9FanonTCYZcbkh8YgQ7 | pbcopy; echo 'Vpn password copied to clipboard'"
 alias dropbox="cd '/Users/filipesperandio/Dropbox (PetroFeed)/PetroFeed - Dev/'"
 alias api="cd ~/petrofeed/platform-apis/"
@@ -54,6 +53,7 @@ mac-mini-ssh() {
   echo Pedro9500 | copy
   ssh pedro@${MAC_MINI_IP}
 }
+
 mac-mini() {
   echo Pedro9500 | copy
   open "vnc://pedro@${MAC_MINI_IP}"
@@ -67,22 +67,6 @@ pinstall() {
 ppinstall() {
   file=$(select_apk)
   on-device install -r -d $file
-}
-
-select_apk() {
-  find_apk | selecta
-}
-
-find_apk() {
-  find . -name '*apk' | grep -v 'unaligned'
-}
-
-grep_device() {
-  adb devices | selecta | awk '{print $1}'
-}
-
-on-device() {
-  adb -s $(grep_device) $*
 }
 
 plog() {

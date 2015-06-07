@@ -74,11 +74,6 @@ cordova_deploy() {
   mv $temp_file $file
 }
 
-droid_at_screen() {
-  export JAVA_OPTS=
-  java -jar ~/.dots/bin/droidAtScreen.jar
-}
-
 concentrate() {
   (cd /Volumes/HD/bkp_macpipo/Music/ && herrie -p Dream\ Theater/ dream_theater/ Foo\ Fighters/ Eric\ Clapton/)
 }
@@ -95,38 +90,6 @@ new-ruby-project() {
   git clone --depth=1 git@github.com:DivineDominion/rspec-guard-spork-boilerplate.git $1
   cd $1
   rm -r .git
-}
-
-android_components() {
-  android list sdk --all --extended | grep "id:" | awk -F" or " '{print $2}' | sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/,/g' | sed 's/"//g' 
-}
-
-docker_time() {
-  boot2docker ssh sudo ntpclient -s -h pool.ntp.org
-}
-
-docker_connect() {
-  status=$(boot2docker status)
-  case "$status" in
-    poweroff)
-      boot2docker start && _docker_shellinit
-      ;;
-    running)
-      _docker_shellinit
-      ;;
-    *)
-      boot2docker restart && _docker_shellinit
-      ;;
-  esac
-
-}
-
-docker_clean() {
-  docker rm $(docker ps -a -q) && docker rmi $(docker images | grep "^<none>" | awk "{print $3}")
-}
-
-_docker_shellinit() {
-  source <(boot2docker shellinit 2>/dev/null | grep export)
 }
 
 gemset-init() {
