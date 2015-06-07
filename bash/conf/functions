@@ -133,7 +133,7 @@ gemset-init() {
   echo '.gems' > .rbenv-gemsets
 }
 
-export_spectacle() {
+export-spectacle() {
   for key in MakeLarger \
     MakeSmaller \
     MoveToBottomHalf \
@@ -156,4 +156,8 @@ export_spectacle() {
     value=$(defaults read com.divisiblebyzero.Spectacle ${key} | sed 's/[^0-9a-f]//g')
     echo "defaults write com.divisiblebyzero.Spectacle ${key} -data ${value}"
   done
+}
+
+export-karabiner() {
+  /Applications/Karabiner.app/Contents/Library/bin/karabiner export
 }

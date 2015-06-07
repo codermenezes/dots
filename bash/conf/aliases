@@ -6,16 +6,10 @@ alias la='ls -A'
 alias l='ls -CF'
 alias fls='ls --color=never'
 alias cdls='cd $(fls | selecta)'
-alias gotoh='cd $(find ~ -type d -maxdepth 4 | selecta)'
-alias goto='cd $(find . -type d -maxdepth 4 | selecta)'
 
 # make grep colorful
 alias cgrep='grep --color=auto -i'
-alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
-
-# set localhost alias
-alias here="localhost"
 
 # set move and copy to be verbose
 alias mv="mv -v"
@@ -23,33 +17,23 @@ alias cp="gcp -v"
 alias vi="vim"
 alias v="vim"
 alias vim="mvim -v"
-alias g="git"
+
 alias rr='source ~/.bash_profile'
-alias deploy='git push heroku master'
-alias ww='goto ~/workspaces 2'
+alias ww='cd ~/workspaces'
 
 alias install_vim='brew install https://raw.github.com/adamv/homebrew-alt/master/duplicates/vim.rb'
 
 #add autocomplete for g alias
+alias g="git"
 complete -o bashdefault -o default -o nospace -F _git g
 
 #bundle aliases
-alias bundle-init="bundle install --path vendor/bundle --binstubs vendor/bundle/binstubs"
-alias b="bundle"
 alias bi="bundle-init"
 alias be="bundle exec"
 
 #rails alias
 alias r="rails"
 
-#rake alias
-alias rk="rake"
-alias rkt="RAILS_ENV=test rake"
-alias rks="rake spec"
-
-# alias to current projects folder
-alias gc="cd ~/prj/current"
-alias start_mongo="mongod run --config /usr/local/Cellar/mongodb/2.0.0-x86_64/mongod.conf &";
 alias habits='history 500 | sed s/^[[:space:]]*[0-9]*[[:space:]]*// | sort | uniq -c | sort -n -r | head -n 20'
 
 alias cdvim='cd ~/.vim'
@@ -57,13 +41,7 @@ alias edvim='cdvim; vim'
 alias dots='cd ~/.dots'
 alias edots='dots; vim'
 
-alias be='bundle exec'
-alias iphone='open "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Applications/iPhone Simulator.app"'
-
-alias pretty_json='python -mjson.tool'
-alias mvn_quick_build='mvn clean install -Dmaven.test.skip=true -Dandroid.lint.skip=true -Dpmd.skip=true -Dversion.code=300000 -Psign'
 alias cd..="cd .." 
-alias groovedown="java -jar /Applications/GrooveDown.jar" 
 alias gr='./gradlew'
 alias build=gradle
 
@@ -79,7 +57,7 @@ alias md-server='harp server'
 
 alias docker-clean='docker rm $(docker ps -a -q) && docker rmi $(docker images | grep "^<none>" | awk "{print $3}")'
 alias record_screen='open ~/Applications/LICEcap.app'
+
 alias update='sudo softwareupdate -i -a; brew update; brew upgrade; brew cleanup; npm install npm -g; npm update -g; sudo gem update --system; sudo gem update'
-alias heroku=/usr/local/bin/heroku
 
 alias kill_periferals='sudo killall VDCAssistant'
