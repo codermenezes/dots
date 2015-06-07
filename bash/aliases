@@ -3,7 +3,7 @@ alias ls='gls -1 --color';
 alias sl='ls';
 alias ll='ls -alF'
 alias la='ls -A'
-alias l='ls -CF'
+alias l='ls'
 alias fls='ls --color=never'
 alias cdls='cd $(fls | selecta)'
 
