@@ -1,15 +1,10 @@
 1password
-adobe-reader
 android-file-transfer
 android-studio
 boot2docker
 caffeine
-ccmenu (!)
-chromium
 colorpicker
-dash
 dropbox
-eclipse-ide
 evernote
 firefox
 genymotion
@@ -22,16 +17,8 @@ karabiner
 licecap
 monodraw
 omnigraffle
-openoffice
-packer
-plex-home-theater
-plex-media-server
-quickcast (!)
-quicksilver
-rubymine
 screenhero
 seashore
-shiftit
 shortcat
 sketch
 skitch
@@ -39,11 +26,7 @@ skype
 slack
 spectacle
 spotify
-sublime-text3
 teamviewer
-toodledo
-unetbootin
-utorrent
 vagrant
 virtualbox
 vlc
