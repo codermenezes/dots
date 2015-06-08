@@ -9,16 +9,17 @@ docker_connect() {
   case "$status" in
     poweroff)
       echo 'starting...'
-      boot2docker start && _docker_shellinit
+      boot2docker start
       ;;
     running)
-      _docker_shellinit
+      echo 'running...'
       ;;
     *)
-      boot2docker restart && _docker_shellinit
+      echo 'restarting...'
+      boot2docker restart
       ;;
   esac
-
+  _docker_shellinit
 }
 
 docker_clean() {
