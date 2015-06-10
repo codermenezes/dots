@@ -16,11 +16,11 @@ source "$HOME/.dots/bash/bashline"
 
 source "$HOME/.dots/bash/bash_completion"
 
-source "$HOME/.dots/bash/rbenv"
+source "$HOME/.dots/bash/ruby"
+
+source "$HOME/.dots/bash/node"
 
 source "$HOME/.dots/bash/npm"
-
-source "$HOME/.dots/bash/nvm"
 
 source "$HOME/.dots/bash/java"
 

@@ -48,6 +48,7 @@ alias build=gradle
 alias disable_minimize_using_cmd_m="defaults write -g NSUserKeyEquivalents -dict-add 'Minimize' '\0'"
 alias bwer=brew
 alias brwe=brew
+alias cide=cider
 
 alias asource="cd $ANDROID_HOME"
 

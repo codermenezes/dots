@@ -21,6 +21,7 @@ con-heroku() {
 
 pet() {
   cd $(fuzzyfinder ~/petrofeed ${1})
+  gem_home .
 }
 
 db() {
