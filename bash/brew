@@ -1,0 +1,4 @@
+# vim: ft=sh
+
+export HOMEBREW_NO_AUTO_UPDATE=1 
+export BREW_PREFIX=$(brew --prefix)

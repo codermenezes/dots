@@ -3,12 +3,15 @@
 # set the bash-completion path
 # needs bash-completion installed
 
-if [ -f $(brew --prefix)/share/bash-completion/bash_completion ]; then
-. $(brew --prefix)/share/bash-completion/bash_completion
+BASH_COMPLETION_SHARE_PATH="${BREW_PREFIX}/share/bash-completion/bash_completion"
+BASH_COMPLETION_ETC_PATH="${BREW_PREFIX}/etc/bash_completion"
+
+if [ -f "${BASH_COMPLETION_SHARE_PATH}" ]; then
+. $BASH_COMPLETION_SHARE_PATH
 fi
 
-if [ -f $(brew --prefix)/etc/bash_completion ]; then
-. $(brew --prefix)/etc/bash_completion
+if [ -f "${BASH_COMPLETION_ETC_PATH}" ]; then
+. $BASH_COMPLETION_ETC_PATH
 fi
 
 

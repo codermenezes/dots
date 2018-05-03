@@ -1,11 +1,47 @@
 # vim: ft=sh
 
-export ANDROID_HOME=/usr/local/Cellar/android-sdk/24.1.2
+export ANDROID_HOME=/usr/local/Cellar/android-sdk/24.4.1_1
 
-PATH="$ANDROID_HOME/bin:$ANDROID_HOME/tools/:$ANDROID_HOME/platform-tools:$PATH" 
+PATH="$ANDROID_HOME/bin:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$ANDROID_HOME/tools/lib:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools/bin:$PATH" 
 
-alias android_reboot='adb shell am broadcast -a android.intent.action.BOOT_COMPLETED '
 alias galaxy='player --vm-name Galaxy &>/dev/null &'
+
+alias logcat='adb logcat -vthreadtime'
+alias adb_fast_reboot='adb shell am broadcast -a android.intent.action.BOOT_COMPLETED '
+alias adb_admin='adb shell am start -n com.android.settings/.DeviceAdminSettings'
+alias adb_settings='adb shell am start -n com.android.settings/.Settings' 
+alias adb_hidden_packages='fgrep -v -f <(adb shell pm list packages |sort) <(adb shell pm list packages -u|sort)'
+
+adb_stop() {
+  adb shell am force-stop ${1}
+}
+
+adb_start_activity() {
+  adb shell am start ${@}
+}
+
+adb_service() {
+  echo "Usage: $ adb shell am startservice -e app com.android.settings mobi.pulsus/.samsung.agent.EnableAppsIntent"
+}
+
+adb_grep_activity() {
+  adb shell pm dump ${1} | grep -A 1 MAIN | grep origActivity | get_value
+}
+
+adb_version() {
+  adb shell dumpsys package ${1} | grep versionName | get_value
+}
+
+get_value() {
+  cut -d'=' -f2
+}
+
+shot() {
+  local file="${HOME}/Desktop/${1:-screenshot.png}"
+  adb shell screencap -p /sdcard/screen.png
+  adb pull /sdcard/screen.png $file > /dev/null
+  echo $file
+}
 
 resign() {
   rm -rf unpacked
@@ -43,4 +79,28 @@ grep_device() {
 
 on-device() {
   adb -s $(grep_device) $*
+}
+
+adb_start() {
+  adb shell am start -n $@
+}
+
+icon_for() {
+  local dir=$2
+  local size=$1
+  local original=$3
+  local dest=$4
+  mkdir -p $dir
+  resize $size $original "${dir}/${dest}"
+}
+
+gen_icons() {
+  local original=$1
+  local dest=$2
+  icon_for 192 main/res/mipmap-xxxhdpi $original $dest
+  icon_for 144 main/res/mipmap-xxhdpi $original $dest
+  icon_for 96 main/res/mipmap-xhdpi $original $dest
+  icon_for 72 main/res/mipmap-hdpi $original $dest
+  icon_for 48 main/res/mipmap-mdpi $original $dest
+  
 }

@@ -1,0 +1,14 @@
+# vim: ft=sh
+
+_codeclimate_commands() {
+  echo 
+  codeclimate help | tail -n +4 | awk '{print $1}' | xargs
+}
+
+_codeclimate() {
+  export CODE_CLIMATE_CMDS=${CODE_CLIMATE_CMDS:-$(_codeclimate_commands)}
+  local cur=${COMP_WORDS[COMP_CWORD]}
+  COMPREPLY=( $(compgen -W "${CODE_CLIMATE_CMDS}" -- $cur) )
+}
+
+#complete -F _codeclimate codeclimate

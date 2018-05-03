@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
+
+cc-test-reporter before-build
+gradle test coberturaReport
+cc-test-reporter after-build -t cobertura
+#cc-test-reporter upload-coverage

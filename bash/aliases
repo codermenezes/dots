@@ -19,12 +19,13 @@ alias v="vim"
 alias vim="mvim -v"
 
 alias rr='source ~/.bash_profile'
-alias ww='cd ~/workspaces'
 
 alias install_vim='brew install https://raw.github.com/adamv/homebrew-alt/master/duplicates/vim.rb'
 
 #add autocomplete for g alias
 alias g="git"
+alias gs="g st; false"
+alias issues='hub browse -- issues'
 complete -o bashdefault -o default -o nospace -F _git g
 
 #bundle aliases
@@ -37,9 +38,10 @@ alias r="rails"
 alias habits='history 500 | sed s/^[[:space:]]*[0-9]*[[:space:]]*// | sort | uniq -c | sort -n -r | head -n 20'
 
 alias cdvim='cd ~/.vim'
-alias edvim='cdvim; vim'
+alias edvim='(cdvim; vim)'
 alias dots='cd ~/.dots'
-alias edots='dots; vim'
+alias edots='(dots; vim)'
+alias edcider='(cd ~/.cider; vim)'
 
 alias cd..="cd .." 
 alias gr='./gradlew'
@@ -52,8 +54,9 @@ alias cide=cider
 
 alias asource="cd $ANDROID_HOME"
 
+alias ope="open"
+
 alias copy="tr -d '\n' | pbcopy"
-alias shot='screenshot2 -d ~/Desktop/screenshot.png'
 alias md-server='harp server'
 
 alias record_screen='open ~/Applications/LICEcap.app'
@@ -61,3 +64,15 @@ alias record_screen='open ~/Applications/LICEcap.app'
 alias update='sudo softwareupdate -i -a; brew update; brew upgrade; brew cleanup; npm install npm -g; npm update -g; sudo gem update --system; sudo gem update'
 
 alias kill_periferals='sudo killall VDCAssistant'
+alias cop='rubocop --auto-correct'
+
+alias cnpj='cat "/Users/filipe/Dropbox (Personal)/FilipeGomesEsperandio-EPP/cnpj.txt"'
+alias dropbox="cd '/Users/filipe/Dropbox (Personal)/'"
+
+alias tunnel=lt
+
+alias simpleserver="python -m SimpleHTTPServer"
+
+alias irc="open /Applications/Colloquy.app"
+
+alias df2=ncdu

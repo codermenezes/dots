@@ -1,0 +1,17 @@
+process.stdin.setEncoding('utf8');
+var abc;
+
+process.stdin.on('readable', function() {
+  var chunk = process.stdin.read();
+  if (chunk !== null) {
+    abc = abc + chunk;
+  }
+});
+
+var bcd = process.argv;
+
+debugger
+
+console.log('>>>>>>>>');
+console.log(abc);
+

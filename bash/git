@@ -1,5 +1,11 @@
 # vim: ft=sh
+git_current_branch() {
+  git rev-parse --abbrev-ref HEAD
+}
 
+git_branch() {
+  echo $( __git_ps1 | sed -E 's/.{2}(.*).{1}/\1/' )
+}
 git_not_pushed(){
     branch=$( __git_ps1 | sed -E 's/.{2}(.*).{1}/\1/' )
     not_pushed=$(git log --pretty="%h" origin/${branch}..${branch} 2>/dev/null | wc -l | xargs)
@@ -16,8 +22,20 @@ fix_repo() {
   git remote -v
 }
 
-__git_ps1() {
-    echo '';
+hub_browse() {
+  hub browse -- blob/master/`ff ${1}`
+}
+
+git-delete-old-branches() {
+  git branch | grep "fe/" | xargs git branch -D
+  git remote prune origin
+  remote_branches=$(git branch --remote | grep "origin/fe/")
+  for i in $remote_branches
+  do
+    echo -n "Delete remote branch \"$i\" ? [y/n]"
+    read remove
+    [[ "$remove" == "y" ]] && git push origin :${i//origin\//}
+  done
 }
 
 eval "$(hub alias -s)"

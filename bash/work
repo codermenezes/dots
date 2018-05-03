@@ -8,11 +8,90 @@ alias pclear="echo prod && adb shell pm clear com.petrofeed.android; echo debug 
 alias puninstall="echo prod && adb uninstall com.petrofeed.android; echo debug && adb uninstall com.petrofeed.android.debug"
 alias papk='find ${HOME}/petrofeed/PetroFeedApp-Android/ -name "*debug-1*.apk"'
 alias vpn="echo -n G9FanonTCYZcbkh8YgQ7 | pbcopy; echo 'Vpn password copied to clipboard'"
-alias dropbox="cd '/Users/filipesperandio/Dropbox (PetroFeed)/PetroFeed - Dev/'"
 alias api="cd ~/petrofeed/platform-apis/"
+alias ssh-jenkins="ssh -i ~/petrofeed/jenkins.pem petrofeed@jenkins.petrofeed.com"
+
+alias adb_uninstall='adb uninstall mobi.pulsus'
+alias adb_uninstall_launcher='adb uninstall mobi.pulsus.launcher'
+alias adb_uninstall_lge='adb uninstall mobi.pulsus.lge'
+alias adb_uninstall_all='adb_uninstall && adb_uninstall_launcher && adb_uninstall_lge'
+alias adb_clear='adb shell pm clear mobi.pulsus'
+
+alias ccli="cd ~/codeclimate/"
+alias cc-docker="docker-compose --file docker-compose.yml --file docker-compose.docker-sync.yml"
+alias dsync="cd ~/codeclimate/harness && chruby 2.3.0 && gem_home . && docker-sync start"
+alias docker-dir="cd /Users/filipe/Library/Containers/com.docker.docker/Data/com.docker.driver.amd64-linux/Docker.qcow2"
+
+alias mdm-lg-docs='open ~/mdmsolutions/lg-docs/index.html'
+alias mdm-android='cd ~/mdmsolutions/mdm-android-agent/'
+alias mdm-settings-pretty='mdm-settings --pretty=all | less -R'
+alias leaks='adb shell am start mobi.pulsus/com.squareup.leakcanary.internal.DisplayLeakActivity'
+
+alias ogc='open -a Google\ Chrome --args --disable-web-security'
+
+alias meet-kat="open https://zoom.us/j/3729271625"
+alias meet-kat2="open https://zoom.us/j/2192181824"
+alias cc-standup="open https://zoom.us/j/718153467"
+alias zoom-21="open https://zoom.us/j/2192181824"
+alias cc-poker="open https://zoom.us/j/3729271625"
+
+alias api-debug-token="164f205fe03a062548025365028731924fe0abdc"
+
+ccanalyze() {
+  CODECLIMATE_DEBUG=1 time codeclimate analyze $@
+}
+
+cc-token() {
+  cat ~/.ssh/codeclimate_local_api_token
+}
+
+cc-http() {
+  http $@ "Authentication: Token token=`cc-token`"
+}
+
+tt() {
+  make test RSPEC_ARGS=$@
+}
+
+trigger-pr() {
+  [[ "${1}" == "" ]] && echo "Usage: trigger-pr https://github.com/filipesperandio/simple_java/pull/3" && return
+  old_ifs=$IFS
+  IFS="/"
+  local github_pr=( $@ )
+  local repo="${github_pr[3]}/${github_pr[4]}"
+  local pr="${github_pr[6]}"
+  IFS=$old_ifs
+  (cd ~/codeclimate/app && \
+    GITHUB_AUTH=filipesperandio:`cat ~/.ssh/github_codeclimate_token_test` ./bin/trigger-pull-request-event "$repo#$pr")
+}
+
+ccmake() {
+  (ccli && cd harness-make && make "$@")
+}
+
+ccompose() {
+ (cd ~/codeclimate/harness/ && docker-compose --file docker-compose.docker-sync.yml --file docker-compose.yml $@)
+}
+
+ccrebuild() {
+  ccompose stop $@; ccompose rm -f $@; ccompose build $@; ccompose up -d
+}
+
+
+postgres_start () {
+  pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start
+}
+
+postgres_stop () {
+  pg_ctl -D /usr/local/var/postgres stop -s -m fast
+}
+
+jenkins() {
+  ssh -A -i ~/petrofeed/jenkins.pem ubuntu@ci.petrofeed.com
+}
 
 pheroku() {
-  heroku $@ --account petrofeed
+  heroku $@
 }
 
 con-heroku() {
@@ -20,7 +99,7 @@ con-heroku() {
 }
 
 pet() {
-  cd $(fuzzyfinder ~/petrofeed ${1})
+  cd $(fuzzyfinder ~/petrofeed "${1}" 1)
   gem_home .
 }
 
@@ -29,19 +108,19 @@ db() {
 
   case "$database" in
     doc-prod)
-      heroku pg:psql --app acquisition-petrofeed --account petrofeed
+      heroku pg:psql --app acquisition-petrofeed
       ;;
     doc-preprod)
-      heroku pg:psql --app acquisition-petrofeed-preprod --account petrofeed
+      heroku pg:psql --app acquisition-petrofeed-preprod
       ;;
     api-prod)
-      heroku pg:psql --app petrofeed-api --account petrofeed
+      heroku pg:psql --app petrofeed-api
       ;;
     api-preprod)
-      heroku pg:psql --app preprod-api-petrofeed --account petrofeed
+      heroku pg:psql --app preprod-api-petrofeed
       ;;
     *)
-      psql -U petrofeed $database
+      PGPASSWORD=petrofeed psql -h localhost  -U petrofeed ${database}
       ;;
   esac
 }
@@ -71,19 +150,97 @@ ppinstall() {
 }
 
 plog() {
-  on-device logcat -vthreadtime *:S ActivityManager:W SystemErr:W AndroidRuntime:E PetroFeed:V
+  on-device logcat -vthreadtime *:S ActivityManager:W SystemErr:W AndroidRuntime:E PulsusApplication:V
+}
+
+mongo-restart () {
+  docker-machine start docker-vm
+  docker-switch docker-vm
+  docker stop mongo
+  docker rm mongo
+  docker run --restart always --restart always --name mongo -d -p 27017:27017 mongo
+}
+
+ip() {
+  ifconfig en0 inet | grep inet | awk '{print $2}'
+}
+
+connect_host() {
+  export CONNECT_HOST="http://$(ip):9292"
+}
+
+ag-ionic() {
+  ag ${1} src/lib/ionic/scss/
 }
 
 pf-connect() {
+  local server=${API_HOST:-http://localhost:9292}
   case ${1} in
     login)
-      http post https://preprod-connect.herokuapp.com/login email='jesseekowalski@gmail.com' password=password
-      ;;
-    get_assets)
-      http get https://preprod-connect.herokuapp.com/assets Authorization:"Bearer $(pf-connect token)"
+      local email=${2:-filipe@petrofeed.com}
+      local password=${3:-password}
+      http post ${server}/auth/login email=$email password=$password
       ;;
     token)
       pf-connect login | json token
       ;;
+    auth)
+      echo Authorization:Bearer $(pf-connect token)
+      ;;
+    options)
+      http OPTIONS ${server}/${2} "$(pf-connect auth)"
+      ;;
+    put)
+      http PUT ${server}/${2} "$(pf-connect auth)" $@
+      ;;
+    post)
+      http POST ${server}/${2} "$(pf-connect auth)" $@
+      ;;
+    *)
+      http GET ${server}/${1} "$(pf-connect auth)" "X-Request-Id":'123'
+      ;;
   esac
+}
+
+mdm-settings () {
+  set -x
+  local token=`cat ~/mdmsolutions/token`
+  http ${1} sync.test-pulsus.mobi/api/settings ApiToken:${token}
+  set +x
+}
+
+mdm-disable-kiosk () {
+  adb shell am startservice mobi.pulsus.samsung/.agent.DisableKioskMode
+}
+
+mdm-logs() {
+ssh www-data@sync.test-pulsus.mobi << EOF
+./staging_logs.sh
+EOF
+}
+
+ccli-api() {
+  local host="https://cce-beta.codeclimate.net/api"
+  set -x
+  curl -i --header "Authorization:Token token=0f75e22d530babb84ea8a7303c6c75e61770c68b" --header "Content-Type: application/json" ${host}/v1${@}
+  set +x
+}
+
+mdm-gcm() {
+  local gcmid=${2:-'cCSzce2wMVo:APA91bEE1xzsDjbMcpi0JSLpWoDO66l7v7DitDBukrhrmGmlobJ4CkKTYcEqpjpkpnX411dEdCwviGfuw9RK6FEMrSZ_irb7P3wI7y9zygoG6z6Fhgi4B0nBm9TDroCor06rsEat__Qq'}
+  curl --header "Authorization: key=AIzaSyDw0kmpBvjYYZZuLVmC--X_HlfxA8AEYPY" --header "Content-Type: application/json" \
+  https://android.googleapis.com/gcm/send -d \
+  "{ \"data\": { \"message\": \"${1}\", \"application\": \"mobi.pulsus\" }, \"to\" : \"${gcmid}\" }"
+}
+
+mdm-logcat() {
+  adb logcat -vthreadtime | tee /tmp/logcat.txt | grep PulsusApplication
+}
+
+mdm-enable() {
+  adb shell am startservice -e app ${1} mobi.pulsus/.samsung.agent.EnableAppsIntent
+}
+
+mdm-disable() {
+  adb shell am startservice -e app ${1} mobi.pulsus/.samsung.agent.DisableAppsIntent
 }

@@ -1,46 +1,58 @@
 # vim: ft=sh
+USER=filipesperandio
+API_TOKEN='14db7ea3b8c157f2865d6abda9098da6'
+
+ACCESS_KEY="${USER}:${API_TOKEN}"
+JENKINS="http://${ACCESS_KEY}@ci.petrofeed.com:8080"
 
 ci() {
+  ci_job $(_jobs | selecta)
+}
+
+_jobs() {
+  curl -g -s -m 3 "${JENKINS}/api/json?pretty=true" \
+    | grep name \
+    | sed -E 's/.+"name" : "(.+)",/\1/' \
+    | sort -u
+}
+
+ci_job() {
+  echo ">>> $@ <<<"
   RETURN_CODE=0
   ci_recursion $@
 }
 ci_recursion() {
+  IFS=$'\n'
   __GREEN__="\033[32m" 
   __RED__="\033[31m" 
   __WHITE__="\033[37m" 
   __YELLOW__="\033[33m" 
   COLOR=$__WHITE__
 
-  USER=fesperandio
-  API_TOKEN='65f8255daefebd57e433ee147ee7d68c'
-
-  ACCESS_KEY="${USER}%40amplify.com:${API_TOKEN}"
-
-  JENKINS="https://${ACCESS_KEY}@jenkins.ampaxs.com:8443"
-
-  JOB=${1}
+  local JOB_ORIG=${@}
+  JOB=$(echo ${@} | sed -E 's/ /%20/g')
   DOWN_STREAM="${JENKINS}/job/${JOB}/api/json?tree=downstreamProjects[name]"
-  DOWN_STREAM_NAMES=$(curl -g -s -m 3 $DOWN_STREAM | perl -pe 's/.*?{"name":"(.*?)"},?(?:\]\})?/\1 /g' | grep -v '{"downstreamProjects":\[\]}' )
-  #if [[ "$DOWN_STREAM_NAMES" != "" ]]; then
-  #  echo -e "${__WHITE__}Downstream projects for ${JOB}: ${DOWN_STREAM_NAMES}" 
-  #fi
+  DOWN_STREAM_NAMES=$(curl -g -s -m 3 $DOWN_STREAM)
+  DOWN_STREAM_NAMES=$(echo $DOWN_STREAM_NAMES | perl -pe 's/.*?{"name":"(.*?)"},?(?:\]\})?/\1\n/g')
 
-  for downStreamProject in ${DOWN_STREAM_NAMES}
+  for project in ${DOWN_STREAM_NAMES}
   do
-    ci_recursion $downStreamProject 
+    local prj=$(echo ${project} | grep -v downstreamProject)
+    [[ "x${prj}x" != 'xx' ]] && ci_recursion $prj
   done
 
-  JOB=${1}
   JOB_URL="${JENKINS}/job/${JOB}/lastCompletedBuild/api/json?tree=result"
-  RESULT=$(curl -s -m 3 $JOB_URL | sed -n 's/.*"result":"\([A-Z]*\).*/\1/p')
-  
+
+  RESULT=$(curl -s -m 3 $JOB_URL)
+  RESULT=$(echo ${RESULT} | sed -n 's/.*"result":"\([A-Z]*\).*/\1/p')
+
   case "$RESULT" in
     SUCCESS ) COLOR=$__GREEN__ ;;
     UNSTABLE ) COLOR=$__YELLOW__ ;;
     * ) COLOR=$__RED__ ;;
   esac
 
-  echo -e "${COLOR}${JOB} : ${RESULT} ${__WHITE__}"
+  echo -e "${COLOR}${JOB_ORIG} : ${RESULT} ${__WHITE__}"
   echo $RESULT | grep SUCCESS > /dev/null
   RETURN_CODE=$(($RETURN_CODE + $?))
 

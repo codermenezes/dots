@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+echo $BASH_SOURCE
+
+export _JAVA_OPTIONS="-Djava.awt.headless=false"
+export JAVA_OPTS="-Xmx1024m -Djruby.compile.mode=OFF -Djava.awt.headless=false -Dapple.awt.UIElement=true"
+java -jar `dirname $BASH_SOURCE`/ClassyShark.jar

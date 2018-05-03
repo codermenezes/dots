@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -uo pipefail
+IFS=$'\n\t'
+
+LOG=/tmp/multi-pull.log
+REPOS=`ls -1`
+
+current-branch() {
+  local dir=$1
+  (cd $dir >/dev/null && git rev-parse --abbrev-ref HEAD)
+}
+
+for REPO in $REPOS
+do
+  if [ -d "${REPO}/.git" ]
+  then
+    printf "Fetching ${REPO} "
+    BRANCH=$(current-branch $REPO)
+    (cd ${REPO} && git fetch origin && git pull --rebase origin $BRANCH)
+    RESULT=$([[ "${?}" == "0" ]] && printf "OK" || printf "NOT OK")
+    echo "${REPO} - ${RESULT}" >> $LOG
+    echo
+    echo "Results in $LOG"
+  fi
+done

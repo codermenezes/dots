@@ -1,11 +1,13 @@
 # vim: ft=sh
 
-export JAVA7=/Library/Java/JavaVirtualMachines/jdk1.7.0_65.jdk/Contents/Home/
-export JAVA8=/Library/Java/JavaVirtualMachines/jdk1.8.0_20.jdk/Contents/Home/
+export JAVA7=/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/
+export JAVA8=/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/
 export JAVA6=/system/library/java/javavirtualmachines/1.6.0.jdk/Contents/Home/
 export JAVA_HOME=$JAVA8
 export _JAVA_OPTIONS="-Djava.awt.headless=true"
-export JAVA_OPTS="-Xmx1024m -Djruby.compile.mode=OFF -Djava.awt.headless=true"
+export GRADLE_OPTS='-Djava.awt.headless=true -Dorg.gradle.jvmargs="-Xmx2400m"'
+export JAVA_OPTS="-Xmx1024m -Djruby.compile.mode=OFF -Dapple.awt.UIElement=true"
+#export JAVA_OPTS="-Xmx1024m -Djruby.compile.mode=OFF -Djava.awt.headless=true -Dapple.awt.UIElement=true"
 export JRUBY_OPTS="-Xcext.enabled=true"
 export STUDIO_JDK=$JAVA_HOME
 

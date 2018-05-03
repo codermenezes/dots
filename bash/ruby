@@ -1,4 +1,28 @@
+# vim: ft=sh
+
 source /usr/local/opt/chruby/share/chruby/chruby.sh
 source /usr/local/opt/chruby/share/chruby/auto.sh
+source /usr/local/share/gem_home/gem_home.sh
 
-chruby ruby-2.2.1
+chruby 2.3.0
+
+set_gem_home() {
+  [[ -e .ruby-version ]] && gem_home .
+}
+
+set_ruby_version() {
+  [[ "$BASH_COMMAND" != "$PROMPT_COMMAND" ]] && chruby_auto
+}
+
+ruby_clear_auto_switch() {
+  trap - DEBUG
+}
+
+ruby_enable_auto_switch() {
+  echo 'Plaease run:'
+  echo "trap 'set_ruby_version && set_gem_home' DEBUG"
+}
+
+#trap 'set_ruby_version && set_gem_home' DEBUG
+
+export RUBOCOP_FLAGS='--auto-correct'

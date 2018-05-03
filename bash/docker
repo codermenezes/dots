@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+dkrun() {
+  docker run --rm -ti $@
+}
+
 docker_time() {
   boot2docker ssh sudo ntpclient -s -h pool.ntp.org
 }
@@ -15,21 +19,77 @@ docker_connect() {
       echo 'running...'
       ;;
     *)
-      echo 'restarting...'
+      echo "restarting... got status: ${status}"
       boot2docker restart
       ;;
   esac
   _docker_shellinit
 }
 
-docker_clean() {
-  docker rm $(docker ps -a -q) 
-  docker rmi $(docker images | grep "^<none>" | awk "{print $3}")
+zombie_containers() {
+  docker ps -a -q | grep -v "$(docker ps -q | xargs | sed 's/ /\\\|/g') "
+}
+
+zombie_images() {
+  docker images --no-trunc | grep none | awk '{print $3 }'
+}
+
+docker-clean() {
+  docker rm $(zombie_containers)
+}
+
+docker-boom() {
+	docker rm $(zombie_containers)
+	docker rmi $(zombie_images)
 }
 
 _docker_shellinit() {
   source <(boot2docker shellinit 2>/dev/null | grep export)
 }
 
-export DOCKER_TLS_VERIFY=1
-_docker_shellinit
+function run_with_compose {
+  DOCKER_COMPOSE_FILE=${1:-docker-compose.yml}
+
+  function sum_all {
+    awk '{s+=$1} END {print s}'
+  }
+  function compose_exit_code {
+    compose ps -q | xargs docker inspect -f '{{ .State.ExitCode }}' | sum_all
+  }
+  function compose {
+    docker-compose -f $DOCKER_COMPOSE_FILE ${@}
+  }
+
+  compose stop && compose build && compose up
+  echo $(compose_exit_code)
+}
+
+docker-switch() {
+  source <(docker-machine env ${1})
+}
+
+mongo-start() {
+  docker run --restart always --restart always --name mongo -d -p 27017:27017 mongo
+  VBoxManage controlvm "docker-vm" natpf1 "tcp-port27017,tcp,,27017,,27017";
+}
+
+docker-machine-upgrade() {
+  mcn_name=${1}
+  apt_url='https://apt.dockerproject.org'
+  lsb_dist='ubuntu'
+  dist_version='xenial'
+  arch=$(docker-machine ssh ${mcn_name} dpkg --print-architecture)
+  repo='main'
+  docker-machine ssh ${mcn_name} "echo deb [arch=${arch}] ${apt_url}/repo ${lsb_dist}-${dist_version} ${repo} | sudo tee /etc/apt/sources.list.d/docker.list"
+  docker-machine ssh ${mcn_name} sudo apt-get update
+  docker-machine ssh ${mcn_name} sudo apt-get install -y docker-engine
+}
+
+
+export AWS_ACCESS_KEY_ID="AKIAIHJQS2AO3SNN6BGQ"
+export AWS_SECRET_ACCESS_KEY="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"
+export AWS_VPC_ID="vpc-52e76537"
+
+# export DOCKER_TLS_VERIFY=1
+# export DOCKER_HOST=tcp://192.168.99.100:2376
+# export DOCKER_CERT_PATH=/Users/filipe/.docker/machine/machines/default

@@ -1,0 +1,14 @@
+I like web and mobile development and the way it is done these days: single page apps full of ajax calls, client side JS frameworks, RESTfull service architectures...
+These are the things I keep my eyes on to make my apps easy to test and automate, easy to deploy, integrate and grow.
+
+- Driven and self-motivated
+- Get the job done, meaning production
+- Love mobile and web development, specially when they hold hands
+- Combine non-stop development, infrastructure automation and active users - you get a happy engineer.
+
+
+As a driven and self-motivated engineer, I love to get the job done. By done I mean that it is running in production. I have a special passion for mobile development specially when it hold hands with web technologies.
+
+The solid experiences I had in different fields of the tech space got me prepared to tackle multiple fronts depending on demand and team's expertise so I can push the development to the last mile.
+
+This is a short list of the technologies I really like and have my eye on currently: Javascript, AngularJS, Cordova/PhoneGap, Ruby, NoSQL, Docker, Continuous Delivery, TDD, Automation.

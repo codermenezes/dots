@@ -1,5 +1,10 @@
 #!/bin/bash
 
+ssh-key() {
+  eval $(ssh-agent)
+  ssh-add -K
+}
+
 log () {
   local fmt="» $1\n"; shift;
   tput setaf 2; printf "\n$fmt" "$@"; tput sgr0;
@@ -8,7 +13,16 @@ log () {
 fuzzyfinder() {
   local root=$1
   local fuzzy=$(echo $2 | sed 's/./&*/g')
-  find ${root} -iname "*${fuzzy}" -type d -maxdepth 1
+  local depth=${3:-"2"}
+  find ${root} -iname "*${fuzzy}" -type d -maxdepth ${depth}
+}
+
+ww() {
+  cd $(find -L ~/workspaces/ -type d -maxdepth 3 | selecta -s ${1:-'/'})
+}
+
+workspace() {
+  cd $(fuzzyfinder ~/workspaces/ ${1})
 }
 
 goto() {
@@ -18,19 +32,36 @@ goto() {
 }
 
 myfind() {
-  find . -iname "*$2*" -type "$1"
+  find ${3:-"."} -iname "*$2*" -type "$1"
 }
 
-ff() { myfind "f" "$1"; }
+ff() { myfind "f" "$1" "$2"; }
 
-fd() { myfind "d" "$1"; }
+fd() { myfind "d" "$1" "$2"; }
+
+new-script() {
+  local file=$1
+  cat > $file <<ENDOFFILE
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
+ENDOFFILE
+  vim $file
+  chmod +x $file
+}
 
 edit() {
-  (cd $HOME/.dots && vim bash/conf/$1)
+  (cd $HOME/.dots && vim bash/$1)
 }
 
 ps() {
   /bin/ps -$1;
+}
+
+clear_temp() {
+  set -x
+  (cd "$HOME/Library/Application Support/Skype" && ff jpg | xargs rm -f)
+  set +x
 }
 
 mvnpublish() {
@@ -87,11 +118,26 @@ log() { echo $@ 1>&2; }
 
 resize() {
   local size=$1
-  convert  -resize $size -background white -extent ${size}x${size} -gravity center $2 $3
+  convert  -resize $size -background none -extent ${size}x${size} -gravity center $2 $3
+}
+
+from-icon() {
+  convert ${1} -resize 60x60 -size 960x640 xc:white +swap -gravity center -composite ${2}-land.png
+  convert ${1} -resize 60x60 -size 640x960 xc:white +swap -gravity center -composite ${2}-port.png
+}
+
+convert-keep-black-curve() {
+  local file=$1
+  convert ${file} -fill transparent -fuzz 20% +opaque "#000000" -statistic Median 2 ${file%.*}.1.png
+}
+
+convert-black-to-white() {
+  local file=$1
+  convert ${file} -fuzz 19% -fill white -opaque black ${file%.*}.1.png
 }
 
 new-ruby-project() {
-  [[ "${1}" == "" ]] && echo "Usage: ${0} <project_name>" && return
+  [[ "${1}" == "" ]] && echo "Usage: new-ruby-project <project_name>" && return
   git clone --depth=1 git@github.com:DivineDominion/rspec-guard-spork-boilerplate.git $1
   cd $1
   rm -r .git
@@ -128,4 +174,70 @@ export-spectacle() {
 
 export-karabiner() {
   /Applications/Karabiner.app/Contents/Library/bin/karabiner export
+}
+
+docker_vnc() {
+  open 'vnc://192.168.59.103:5900'
+}
+
+cnpj-login() {
+  local _cnpj=$(cnpj | sed -E 's/[\.\/\­]//g')
+  echo ${_cnpj}
+  echo ${_cnpj} | pbcopy
+}
+
+cnpj-password() {
+  echo 'Fg227481' |pbcopy
+}
+
+android-gen-key() {
+  local filename=${1:-"debug"}
+  local alias=${2:-"android"}
+  echo "File ${filename} Alias ${alias}"
+  keytool -genkey -v -keystore ${filename}.keystore -alias ${alias} -keyalg RSA -keysize 2048 -validity 10000
+}
+
+export COUNT=0
+increment() {
+  COUNT=$(($COUNT + 1))
+  echo $COUNT
+}
+
+disable-android-file-transfer() {
+  PID=$(ps -fe | grep "[A]ndroid File Transfer Agent" | awk '{print $2}')
+  if [[ -n $PID ]]
+  then
+    kill $PID
+  fi
+  mv "/Applications/Android File Transfer.app/Contents/Resources/Android File Transfer Agent.app" "/Applications/Android File Transfer.app/Contents/Resources/Android File Transfer Agent DISABLED.app"
+  mv "${HOME}/Library/Application Support/Google/Android File Transfer/Android File Transfer Agent.app" "${HOME}/Library/Application Support/Google/Android File Transfer/Android File Transfer Agent DISABLED.app"
+  osascript -e 'tell application "System Events" to delete every login item whose name is "Android File Transfer Agent"'
+}
+
+mov2mp4() {
+  ffmpeg -i ${1} -vcodec h264 -acodec aac -strict -2 ${2}
+}
+
+ok() {
+  local msg="display notification \"OK\" with title \"From terminal\""
+  osascript -e "${msg}"
+  play -v2 /System/Library/Sounds/Glass.aiff > /dev/null 2>&1
+}
+
+ohno() {
+  local msg="display notification \"Oh no!\" with title \"Oops\""
+  osascript -e "${msg}"
+  say 'Oh no;'
+}
+
+ntfy() {
+  set -x
+  local msg="display notification \"${@}\" with title \"Heads up!\""
+  osascript -e "${msg}"
+  set +x
+}
+
+
+remove-focus() {
+  for i in $(ag -l "focus:true"); do sed -i '' -E 's/, focus:true//' $i; done;
 }

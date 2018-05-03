@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
 (unset _JAVA_OPTIONS \
-  && cd /Users/filipesperandio/Dropbox/documentos/imposto_de_renda/Brazil/2016-2015/CarneLeao \
+  && cd "/Users/filipe/Dropbox (Personal)/documentos/imposto_de_renda/Brazil/2016-2015/CarneLeao" \
   && ./exec.sh)
 

@@ -1,0 +1,1 @@
+#(sudo kextunload -b com.globaldelight.driver.Boom2Device 2>/dev/null) || true

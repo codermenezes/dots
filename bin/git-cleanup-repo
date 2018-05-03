@@ -1,0 +1,31 @@
+#!/bin/bash
+IFS=$'\n\t'
+
+list_remote_branches() {
+  git branch --remote
+}
+
+local_branches() {
+  git branch | grep -v master
+}
+
+ask_remove() {
+  local branch=${1}
+  echo "Remove branch '${branch}' ?"
+  read answer
+  [[ "y" == "${answer}" ]] && git branch -D $branch
+}
+
+git fetch origin -p
+
+remote_branches=$(list_remote_branches)
+
+local_branches
+
+for branch in $(local_branches)
+do
+  local_branch=$(echo ${branch//[[:blank:]]/})
+  echo $remote_branches | grep $local_branch
+  [[ "$?" == "1" ]] && ask_remove $local_branch
+done
+
