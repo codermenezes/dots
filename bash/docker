@@ -91,6 +91,9 @@ docker-prune() {
   docker system prune --volumes -f
 }
 
+docker-clock() {
+  docker run --rm --privileged alpine hwclock -s
+}
 
 export AWS_ACCESS_KEY_ID=""
 export AWS_SECRET_ACCESS_KEY=""
