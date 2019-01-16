@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+alias dc="docker-compose"
+
 dkrun() {
   docker run --rm -ti $@
 }
@@ -83,6 +85,10 @@ docker-machine-upgrade() {
   docker-machine ssh ${mcn_name} "echo deb [arch=${arch}] ${apt_url}/repo ${lsb_dist}-${dist_version} ${repo} | sudo tee /etc/apt/sources.list.d/docker.list"
   docker-machine ssh ${mcn_name} sudo apt-get update
   docker-machine ssh ${mcn_name} sudo apt-get install -y docker-engine
+}
+
+docker-prune() {
+  docker system prune --volumes -f
 }
 
 
