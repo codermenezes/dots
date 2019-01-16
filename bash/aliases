@@ -22,12 +22,6 @@ alias rr='source ~/.bash_profile'
 
 alias install_vim='brew install https://raw.github.com/adamv/homebrew-alt/master/duplicates/vim.rb'
 
-#add autocomplete for g alias
-alias g="git"
-alias gs="g st; false"
-alias issues='hub browse -- issues'
-complete -o bashdefault -o default -o nospace -F _git g
-
 #bundle aliases
 alias bi="bundle-init"
 alias be="bundle exec"

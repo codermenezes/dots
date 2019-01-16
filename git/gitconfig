@@ -1,3 +1,7 @@
+[user]
+	email = filipesperandio@gmail.com
+	name = Filipe Esperandio
+
 [color]
   status = auto
   branch = auto
@@ -28,6 +32,7 @@
   whitespace=fix,-indent-with-non-tab,trailing-space,space-before-tab,cr-at-eol
 
 [diff]
+  tool = vimdiff
   ignoreSubmodules = dirty
 
 [apply]
@@ -36,43 +41,38 @@
 [alias]
   a = add
   aa = add --all
-  dc = diff --cached
-  alias = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\\t=> \\2/' | sort
-  l = log
-  lg = log --graph --pretty=format:'%C(yellow)%h %Cblue%aN %Cgreen%ar %Creset%s'
-  lg-nocolor = log --pretty=format:'%h %aN %ar %s' 
-  log-summary = log --pretty=format:'%s' 
+  ap = aa -p
+  ci = commit
+  co = checkout
   ls = log --stat
-  last = log -1 HEAD
-  w = log --name-status #short whatchanged
   s = show
   d = diff --word-diff
   ds = diff --staged
+  dc = diff --cached
   st = status
-  ss = status -s
-  co = checkout
-  ci = commit
-  cf = "!git ss | grep '[UD][UD]' --color"
-  ccf = "!git cf | wc -l"
-  br = branch
-  px = push
-  pl = pull
   pr = pull --rebase
-  r = remote
-  unstage = reset HEAD --
-  this = !git init && git add . && git commit -m \"Initial commit.\"
+  d = diff --word-diff
+  fo = fetch origin
+  lg = lgg -n 15
+  lgg = log --graph --pretty=tformat:'%C(yellow)%h %Cblue%aN %Cgreen%ar %Creset%s'
+  lg-show= "!git lg | fzy | awk '{print $2}' | xargs git show"
+  lg-hash = log --pretty=tformat:'%h'
+  lg-date = log --pretty=tformat:'%Cgreen%ad %Cblue%aN %Creset%s'
+  lg-nocolor = log --pretty=tformat:'%h %aN %ar %s'
+  log-summary = log --pretty=format:'%s'
+  alias = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\\t=> \\2/' | sort
   amend = !git log -n 1 --pretty=tformat:%s%n%n%b | git commit -F - --amend
-  x  = commit -m
-  xa = commit -a -m
-  ignore=!([ ! -e .gitignore ] && touch .gitignore) | echo $1 >>.gitignore
-  apl = "!findstash() { git stash apply `git stash list | grep $1 | cut -d':' -f1`; }; findstash"
-  unchange = "!git ls-files -v|grep '^h'"
   assume-unchange = update-index --assume-unchanged
+  assume-unchange-list = "!git ls-files -v|grep '^h'"
   no-assume-unchange = update-index --no-assume-unchanged
   boom = clean -xfd
-  fo = fetch origin
+  current-branch = rev-parse --abbrev-ref HEAD
+  delete-merged-branches = "!git co master && git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d"
+  ignore=!([ ! -e .gitignore ] && touch .gitignore) | echo $1 >>.gitignore
+  ignored = !git ls-files -v | grep "^[[:lower:]]"
+  this = !git init && git add . && git commit -m \"Initial commit.\"
+
 [push]
   default = simple
-[user]
-	email = filipesperandio@gmail.com
-	name = Filipe Esperandio
+[github]
+	user = filipesperandio
