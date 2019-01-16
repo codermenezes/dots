@@ -219,9 +219,9 @@ mov2mp4() {
 }
 
 ok() {
-  local msg="display notification \"OK\" with title \"From terminal\""
+  local msg="display notification \"${1:-"..."}\" with title \"OK\""
   osascript -e "${msg}"
-  play -v2 /System/Library/Sounds/Glass.aiff > /dev/null 2>&1
+  play -v2 /System/Library/Sounds/Funk.aiff > /dev/null 2>&1
 }
 
 ohno() {
@@ -240,4 +240,65 @@ ntfy() {
 
 remove-focus() {
   for i in $(ag -l "focus:true"); do sed -i '' -E 's/, focus:true//' $i; done;
+}
+
+ec2() {
+  local ip=$1
+  local port=${2:-3000}
+  ssh -L $port:$ip:$port -A -i ~/.ssh/ubuntu-2018-05-8.pem ubuntu@$ip
+}
+
+beep() {
+  osascript -e 'beep'
+}
+
+count() {
+  MY_COUNT=${MY_COUNT:-0}
+  MY_COUNT=$(expr $MY_COUNT + ${1:-1})
+  echo $MY_COUNT
+  export MY_COUNT
+}
+
+reset-count() {
+  export MY_COUNT=0
+}
+
+sayit() {
+  echo -n " ${1}"
+  (say ${1} &) > /dev/null
+}
+
+stop-watch() {
+  local i=${1:-20}
+  local msg=${2:-"Go!"}
+
+  echo
+  sayit "${msg}"
+
+  while [ $i -gt 0 ]
+  do
+    sleep 1
+
+    if [ $((${i} % 5)) == "0" ] || [ ${i} -le 3 ]
+    then
+      sayit "${i}"
+    else
+      echo -n " ${i}"
+    fi
+
+    i=$[$i-1]
+  done
+
+  sleep 1
+}
+
+exercise() {
+  for i in $(seq ${1:-"10"})
+  do
+    echo
+    sayit "Round ${i}"
+    sleep 1
+    stop-watch ${2:-"20"} "go!"
+    stop-watch 3 "rest"
+  done
 }
