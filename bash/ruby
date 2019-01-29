@@ -26,3 +26,5 @@ ruby_enable_auto_switch() {
 #trap 'set_ruby_version && set_gem_home' DEBUG
 
 export RUBOCOP_FLAGS='--auto-correct'
+
+alias pry="docker run --rm -ti -v $HOME:/root pry"
