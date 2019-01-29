@@ -51,6 +51,8 @@
   dc = diff --cached
   st = status
   pr = pull --rebase
+  prm = pull --rebase origin master
+  prq = pull-request -o
   d = diff --word-diff
   fo = fetch origin
   lg = lgg -n 15
@@ -60,6 +62,7 @@
   lg-date = log --pretty=tformat:'%Cgreen%ad %Cblue%aN %Creset%s'
   lg-nocolor = log --pretty=tformat:'%h %aN %ar %s'
   log-summary = log --pretty=format:'%s'
+  stash-list = "!git stash list | fzy | cut -d ':' -f1"
   alias = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\\t=> \\2/' | sort
   amend = !git log -n 1 --pretty=tformat:%s%n%n%b | git commit -F - --amend
   assume-unchange = update-index --assume-unchanged
@@ -71,6 +74,9 @@
   ignore=!([ ! -e .gitignore ] && touch .gitignore) | echo $1 >>.gitignore
   ignored = !git ls-files -v | grep "^[[:lower:]]"
   this = !git init && git add . && git commit -m \"Initial commit.\"
+  switch = "!f() { git branch | fzy | awk '{print $1}' | xargs git checkout ; }; f"
+  branches = branch
+  pushb = "!f() { git push origin $(git current-branch); }; f"
 
 [push]
   default = simple
