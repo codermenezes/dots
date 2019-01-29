@@ -86,14 +86,6 @@ vt() {
   make app.test RSPEC_ARGS="--fail-fast --profile 0 $spec"
 }
 
-mongo-restart () {
-  docker-machine start docker-vm
-  docker-switch docker-vm
-  docker stop mongo
-  docker rm mongo
-  docker run --restart always --restart always --name mongo -d -p 27017:27017 mongo
-}
-
 ip() {
   ifconfig en0 inet | grep inet | awk '{print $2}'
 }
@@ -103,3 +95,4 @@ clear-logs() {
   local logfile=$(docker inspect --format='{{.LogPath}}' $container)
   docker run -ti -v /var/lib/docker/containers:/var/lib/docker/containers ubuntu bash -c "truncate -s 0 ${logfile}"
 }
+
