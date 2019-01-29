@@ -11,8 +11,10 @@ PATH="$HOME/.dots/bin:$PATH"
 PATH="$HOME/bin:$PATH"
 PATH="$HOME/Dropbox/bin:$PATH"
 
-#PATH="$(brew --prefix coreutils)/libexec/gnubin):$PATH"
-PATH="${BREW_PREFIX}/opt/coreutils:$PATH"
+PATH="${BREW_PREFIX}/opt/coreutils/libexec/gnubin:$PATH"
+PATH="${BREW_PREFIX}/opt/gnu-sed/libexec/gnubin:$PATH"
+
+MANPATH="${BREW_PREFIX}/opt/gnu-sed/libexec/gnuman:$MANPATH"
 
 # Programs
 PATH="$PATH:/opt/homebrew-cask/Caskroom/genymotion/2.2.2/Genymotion.app/Contents/MacOS"
