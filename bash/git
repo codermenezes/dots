@@ -13,10 +13,15 @@ git_current_branch() {
 git_branch() {
   echo $( __git_ps1 | sed -E 's/.{2}(.*).{1}/\1/' )
 }
+
 git_not_pushed(){
     branch=$( __git_ps1 | sed -E 's/.{2}(.*).{1}/\1/' )
     not_pushed=$(git log --pretty="%h" origin/${branch}..${branch} 2>/dev/null | wc -l | xargs)
     [[ "$not_pushed" != "0" ]] && echo "(${not_pushed} commits ahead)" || echo " "
+}
+
+git_dir_name() {
+  git rev-parse --show-toplevel
 }
 
 fix_repo() {
