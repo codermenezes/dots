@@ -270,10 +270,6 @@ sayit() {
 
 stop-watch() {
   local i=${1:-20}
-  local msg=${2:-"Go!"}
-
-  echo
-  sayit "${msg}"
 
   while [ $i -gt 0 ]
   do
@@ -292,13 +288,20 @@ stop-watch() {
   sleep 1
 }
 
+exercise-repeat() {
+  local message=$1
+  local repetitions=$2
+
+  echo
+  sayit "$message"
+  stop-watch $repetitions
+}
+
 exercise() {
   for i in $(seq ${1:-"10"})
   do
-    echo
-    sayit "Round ${i}"
-    sleep 1
-    stop-watch ${2:-"20"} "go!"
-    stop-watch 3 "rest"
+    exercise-repeat "Round ${i}:" ${2:-"20"}
+    exercise-repeat "Rest:" 3
   done
+  echo
 }
