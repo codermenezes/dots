@@ -52,14 +52,18 @@
   st = status
   pr = pull --rebase
   prm = pull --rebase origin master
-  prq = pull-request -o
+  prq = "!hub pull-request -op"
+  prb = "!f() { git pr origin $(git current-branch) ; }; f"
   d = diff --word-diff
+  diff-master = "!f() { git diff master..$(git current-branch) ; }; f"
   fo = fetch origin
-  lg = lgg -n 15
+  edit-config = config --edit --global
+  lg = log -n15 --graph --pretty=tformat:'%C(yellow)%h %Cblue%aN %Cgreen%ar %Creset%s'
   lgg = log --graph --pretty=tformat:'%C(yellow)%h %Cblue%aN %Cgreen%ar %Creset%s'
   lg-show= "!git lg | fzy | awk '{print $2}' | xargs git show"
   lg-hash = log --pretty=tformat:'%h'
   lg-date = log --pretty=tformat:'%Cgreen%ad %Cblue%aN %Creset%s'
+  invoice = "! git lg-date --author=Filipe"
   lg-nocolor = log --pretty=tformat:'%h %aN %ar %s'
   log-summary = log --pretty=format:'%s'
   stash-list = "!git stash list | fzy | cut -d ':' -f1"
@@ -75,8 +79,9 @@
   ignored = !git ls-files -v | grep "^[[:lower:]]"
   this = !git init && git add . && git commit -m \"Initial commit.\"
   switch = "!f() { git branch | fzy | awk '{print $1}' | xargs git checkout ; }; f"
+  branchfzy = "!f() { git branch | fzy | awk '{print $1}' ; }; f"
   branches = branch
-  pushb = "!f() { git push origin $(git current-branch); }; f"
+  pushb = "!f() { git push origin $(git current-branch) $@ ; }; f"
 
 [push]
   default = simple
