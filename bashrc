@@ -40,6 +40,8 @@ source "$HOME/.dots/bash/fixes"
 
 source "$HOME/.dots/bash/codeclimate"
 
+source "$HOME/.dots/bash/ios"
+
 # Instalacao das Funcoes ZZ (www.funcoeszz.net)
 # export ZZOFF=""  # desligue funcoes indesejadas
 #export ZZPATH="$HOME/.dots/bash/funcoeszz"  # script
