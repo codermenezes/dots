@@ -305,3 +305,7 @@ exercise() {
   done
   echo
 }
+
+svg2ico() {
+  convert -background transparent -define 'icon:auto-resize=16,24,32,64' $1 $2
+}
