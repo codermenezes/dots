@@ -6,6 +6,19 @@ alias gs="g st; false"
 alias issues='hub browse -- issues'
 complete -o bashdefault -o default -o nospace -F _git g
 
+hubpr() {
+  pr=${1:-$(hub_find_pr)}
+  hub browse -- pull/${pr}
+}
+
+cpr_hub_create_pr() {
+  hub pull-request -opf $*
+}
+
+hub_find_pr() {
+  hub pr list -h $(git_current_branch) | awk '{print $1}' | sed 's/#//'
+}
+
 git_current_branch() {
   git rev-parse --abbrev-ref HEAD
 }
@@ -50,4 +63,4 @@ git-delete-old-branches() {
   done
 }
 
-eval "$(hub alias -s)"
+#eval "$(hub alias -s)"
