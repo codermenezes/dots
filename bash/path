@@ -7,6 +7,7 @@ PATH="/sbin:$PATH"
 
 PATH="/usr/local/sbin:$PATH"
 PATH="/usr/local/bin:$PATH"
+PATH="$HOME/.cargo/bin:$PATH"
 PATH="$HOME/.dots/bin:$PATH"
 PATH="$HOME/bin:$PATH"
 PATH="$HOME/Dropbox/bin:$PATH"
