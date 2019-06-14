@@ -14,4 +14,10 @@ if [ -f "${BASH_COMPLETION_ETC_PATH}" ]; then
 . $BASH_COMPLETION_ETC_PATH
 fi
 
-
+# improve bash history
+export HISTTIMEFORMAT="%h %d %H:%M:%S "
+export HISTSIZE=10000
+export HISTFILESIZE=10000
+shopt -s histappend
+shopt -s cmdhist
+PROMPT_COMMAND="history -a"
