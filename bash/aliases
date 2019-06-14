@@ -1,7 +1,7 @@
 # make ls colorful
 alias ls='gls -1 --color';
 alias sl='ls';
-alias ll='ls -alF'
+alias ll='ls -alFh'
 alias la='ls -A'
 alias l='ls'
 alias fls='ls --color=never'
@@ -16,7 +16,11 @@ alias mv="mv -v"
 alias cp="gcp -v"
 alias vi="vim"
 alias v="vim"
-alias vim="mvim -v"
+#alias vim="mvim -v"
+alias vim="nvim"
+
+alias rm=grm
+alias cat=bat
 
 alias rr='source ~/.bash_profile'
 
